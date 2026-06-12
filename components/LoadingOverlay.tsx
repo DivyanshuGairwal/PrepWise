@@ -53,7 +53,7 @@ export default function LoadingOverlay() {
         {/* Wait disclaimer */}
         <p className="text-[10px] text-zinc-600 mt-6 leading-relaxed">
           This may take up to 20-30 seconds depending on network load. <br />
-          Gemini is constructing 40 comprehensive questions.
+          AI-Powered Analysis is constructing 40 comprehensive questions.
         </p>
       </div>
     </div>

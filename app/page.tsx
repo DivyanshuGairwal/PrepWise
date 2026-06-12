@@ -159,9 +159,9 @@ export default function Home() {
                   <div className="flex items-start gap-3 p-4 bg-amber-950/20 border border-amber-500/30 rounded-2xl text-amber-400 text-sm">
                     <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <h4 className="font-bold text-amber-300">Gemini API Quota Exhausted</h4>
+                      <h4 className="font-bold text-amber-300">AI API Quota Exhausted</h4>
                       <p className="text-xs text-amber-400/80 mt-1 leading-relaxed">
-                        Your Gemini API free-tier daily quota has been fully used up. You have two options:
+                        Your AI API free-tier daily quota has been fully used up. You have two options:
                       </p>
                       <ul className="text-xs text-amber-400/70 mt-2 list-disc list-inside space-y-1">
                         <li>Wait until your quota resets (usually midnight Pacific Time) and try again.</li>
@@ -229,7 +229,7 @@ export default function Home() {
           <div className="flex gap-4">
             <span className="hover:text-zinc-500 transition">Interactive Mock Prep</span>
             <span>•</span>
-            <span className="hover:text-zinc-500 transition">Gemini Integration</span>
+            <span className="hover:text-zinc-500 transition">AI-Powered Integration</span>
           </div>
         </div>
       </footer>

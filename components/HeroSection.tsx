@@ -21,14 +21,14 @@ export default function HeroSection({ onStartClick }: HeroSectionProps) {
 
         {/* Hero Headline */}
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-          Master Your Next Interview with <br />
+          Prepare Smarter for Every Interview <br />
           <span className="text-gradient">Personalized AI Precision</span>
         </h1>
 
         {/* Hero Description */}
         <p className="max-w-2xl mx-auto text-lg sm:text-xl text-zinc-400 mb-10 leading-relaxed">
-          Upload your resume PDF and paste the job description. PrepWise instantly aligns your experience, extracts key skills, and generates 40 tailored interview questions with answering strategies.
-        </p>
+          Upload your resume and a job description to get personalized technical, behavioral, and HR interview questions tailored to your experience.
+          </p>
 
         {/* CTA Button */}
         <div className="flex justify-center mb-16">
@@ -70,7 +70,7 @@ export default function HeroSection({ onStartClick }: HeroSectionProps) {
             <div className="w-12 h-12 bg-cyan-500/15 rounded-xl flex items-center justify-center mb-4">
               <CheckCircle className="w-6 h-6 text-cyan-400" />
             </div>
-            <h3 className="text-lg font-bold text-zinc-100 mb-2">40 Answering Strategies</h3>
+            <h3 className="text-lg font-bold text-zinc-100 mb-2">3 Answering Strategies</h3>
             <p className="text-zinc-400 text-sm leading-relaxed">
               Generates Technical, Resume, Behavioral, and HR questions complete with why they are asked and key points to emphasize.
             </p>
