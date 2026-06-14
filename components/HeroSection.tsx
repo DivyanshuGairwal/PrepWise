@@ -16,7 +16,7 @@ export default function HeroSection({ onStartClick }: HeroSectionProps) {
         {/* SaaS Badge */}
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-sm font-medium mb-6 animate-pulse-slow">
           <Sparkles className="w-4 h-4 text-indigo-400" />
-          <span>Powered by Gemini 1.5 Flash</span>
+          <span>Powered by OPENAI</span>
         </div>
 
         {/* Hero Headline */}
