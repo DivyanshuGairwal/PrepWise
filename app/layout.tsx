@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PrepWise - AI-Powered Interview Preparation Platform",
-  description: "Get personalized technical, behavioral, and HR interview questions based on your resume PDF and target job description using Powered by Advanced Language Models",
+  title: "PrepWise",
+  description: "AI-powered interview preparation platform that generates personalized technical, behavioral, resume, and HR questions from resumes and job descriptions",
 };
 
 export default function RootLayout({
