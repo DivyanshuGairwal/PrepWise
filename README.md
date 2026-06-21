@@ -39,4 +39,3 @@ Clone the repository:
 git clone https://github.com/YOUR_USERNAME/prepwise.git  
 
 
-git hub
