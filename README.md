@@ -22,7 +22,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 - TypeScript
 - Tailwind CSS
 - OpenRouter API
-- PDF Pa
+- PDF
 
 ## How It Works 
 
