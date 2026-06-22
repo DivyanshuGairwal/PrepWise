@@ -22,9 +22,9 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 - TypeScript
 - Tailwind CSS
 - OpenRouter API
-- PDF
+- PDF Parsing
 
-## How It Works 
+## How It Works she 
 
 1. Upload your resume.
 2. Paste a job description.
