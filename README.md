@@ -29,7 +29,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 1. Upload your resume.
 2. Paste a job description.
 3. Generate your personalized interview preparation kit.
-4. Practice using AI-gener
+4. Practice using AI-generated quest
 
 ## Local Setup
 
