@@ -38,4 +38,4 @@ Clone the repository:
 ```bash
 git clone https://github.com/YOUR_USERNAME/prepwise.git  
 
-git clone 
+git clon
