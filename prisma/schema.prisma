@@ -1,0 +1,97 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String         @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+  interviewKits InterviewKit[]
+  candidateProfile CandidateProfile?
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model InterviewKit {
+  id                 String           @id @default(cuid())
+  userId             String
+  jobTitle           String?
+  jobDescription     String?
+  resumeFileName     String?
+  resumeText         String?          @db.Text
+  generatedQuestions Json             // [{ question: string, idealAnswer?: string, answerEvaluation?: any }]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mockInterviews     MockInterview[]
+}
+
+model CandidateProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  skills      Json     // Array of skills
+  experience  Json     // Experience analysis
+  education   Json     // Education details
+  rawAnalysis String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MockInterview {
+  id             String    @id @default(cuid())
+  interviewKitId String
+  status         String    // "PENDING", "COMPLETED"
+  feedback       Json?     // Detailed feedback on candidate answers
+  voiceRecordings Json?    // References to voice recordings / metadata
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  interviewKit   InterviewKit @relation(fields: [interviewKitId], references: [id], onDelete: Cascade)
+}

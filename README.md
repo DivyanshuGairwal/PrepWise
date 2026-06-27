@@ -24,6 +24,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 - OpenRouter API
 - PDF Parsing
 
+
 ## How It Works 
 
 1. Upload your resume.
@@ -33,7 +34,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 
 ## Local Setup
 
-Clone the repository:
+Clone the 
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/prepwise.git  
