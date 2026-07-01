@@ -14,7 +14,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 - Behavioral questions
 - HR questions
 - Clean and responsive UI
-- Export interview kit
+- Export interview k
 
 ## Tech Stack
 
