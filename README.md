@@ -31,7 +31,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 3. Generate your personalized interview preparation kit.
 4. Practice using AI-generated questions.
 
-## Local S
+## Local Se
 
 Clone the repository:
 
