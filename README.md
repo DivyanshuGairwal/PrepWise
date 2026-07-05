@@ -24,7 +24,7 @@ The goal is to help students, freshers, and job seekers prepare for interviews w
 - OpenRouter API
 - PDF Parsing
 
-## How It Works 
+## How It Work
 
 1. Upload your resume.
 2. Paste a job description.
