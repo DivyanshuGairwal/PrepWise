@@ -1,5 +1,20 @@
 import React, { useState, useMemo } from "react";
-import { Copy, RefreshCw, Download, FileText, Check, Search, Terminal, Star, Sparkles, UserCheck } from "lucide-react";
+import {
+  Copy,
+  RefreshCw,
+  Download,
+  FileText,
+  Check,
+  Search,
+  Terminal,
+  Star,
+  Sparkles,
+  UserCheck,
+  Brain,
+  Target,
+  Layers,
+} from "lucide-react";
+
 import { AnalysisResult, QuestionType } from "@/types";
 import QuestionCard from "./QuestionCard";
 
@@ -8,10 +23,28 @@ interface ResultsViewProps {
   onReset: () => void;
 }
 
-export default function ResultsView({ data, onReset }: ResultsViewProps) {
-  const [activeTab, setActiveTab] = useState<QuestionType>("technical");
+export default function ResultsView({
+  data,
+  onReset,
+}: ResultsViewProps) {
+  const [activeTab, setActiveTab] =
+    useState<QuestionType>("technical");
+
   const [copiedAll, setCopiedAll] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const allQuestions = [
+    ...data.technical,
+    ...data.resume,
+    ...data.behavioral,
+    ...data.hr,
+  ];
+
+  const detectedSkills = Array.from(
+    new Set(
+      allQuestions.flatMap((q) => q.keyPoints)
+    )
+  ).slice(0, 20);
 
   const tabThemes = {
     technical: {
@@ -23,255 +56,293 @@ export default function ResultsView({ data, onReset }: ResultsViewProps) {
       label: "Technical Prep",
       count: data.technical.length,
     },
+
     resume: {
       primary: "bg-purple-600",
       bg: "bg-purple-500/10",
       border: "border-purple-500/40",
       text: "text-purple-400",
       icon: FileText,
-      label: "Resume Deep-Dive",
+      label: "Resume Deep Dive",
       count: data.resume.length,
     },
+
     behavioral: {
       primary: "bg-emerald-600",
       bg: "bg-emerald-500/10",
       border: "border-emerald-500/40",
       text: "text-emerald-400",
       icon: Star,
-      label: "Behavioral Situations",
+      label: "Behavioral",
       count: data.behavioral.length,
     },
+
     hr: {
       primary: "bg-amber-600",
       bg: "bg-amber-500/10",
       border: "border-amber-500/40",
       text: "text-amber-400",
       icon: UserCheck,
-      label: "HR & Cultural Fit",
+      label: "HR & Culture",
       count: data.hr.length,
     },
   };
 
   const activeTheme = tabThemes[activeTab];
 
-  // Search filter
   const filteredQuestions = useMemo(() => {
-    const list = data[activeTab] || [];
+    const list = data[activeTab];
+
     if (!searchQuery.trim()) return list;
-    
-    const query = searchQuery.toLowerCase();
-    return list.filter(
-      (q) =>
-        q.question.toLowerCase().includes(query) ||
-        q.whyAsked.toLowerCase().includes(query) ||
-        q.suggestedApproach.toLowerCase().includes(query) ||
-        q.keyPoints.some((pt) => pt.toLowerCase().includes(query))
+
+    return list.filter((q) =>
+      q.question
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
     );
   }, [data, activeTab, searchQuery]);
 
   const handleCopyAll = async () => {
-    try {
-      const categories: { label: string; list: typeof data.technical }[] = [
-        { label: "Technical Questions", list: data.technical },
-        { label: "Resume-Based Questions", list: data.resume },
-        { label: "Behavioral Questions", list: data.behavioral },
-        { label: "HR/Cultural Questions", list: data.hr },
-      ];
+    const text = allQuestions
+      .map((q, i) => `${i + 1}. ${q.question}`)
+      .join("\n\n");
 
-      const formattedText = categories
-        .map(
-          (cat) =>
-            `=== ${cat.label} ===\n\n` +
-            cat.list
-              .map(
-                (q, i) =>
-                  `${i + 1}. Question: ${q.question}\n` +
-                  `   Why Asked: ${q.whyAsked}\n` +
-                  `   Approach: ${q.suggestedApproach}\n` +
-                  `   Keywords: ${q.keyPoints.join(", ")}\n`
-              )
-              .join("\n")
-        )
-        .join("\n\n");
+    await navigator.clipboard.writeText(text);
 
-      await navigator.clipboard.writeText(formattedText);
-      setCopiedAll(true);
-      setTimeout(() => setCopiedAll(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy all", err);
-    }
+    setCopiedAll(true);
+
+    setTimeout(() => {
+      setCopiedAll(false);
+    }, 2000);
   };
 
   const handleDownloadMarkdown = () => {
-    const categories: { label: string; list: typeof data.technical }[] = [
-      { label: "Technical Questions", list: data.technical },
-      { label: "Resume-Based Questions", list: data.resume },
-      { label: "Behavioral Questions", list: data.behavioral },
-      { label: "HR/Cultural Questions", list: data.hr },
-    ];
+    let content = "# PrepWise Interview Kit\n\n";
 
-    let mdContent = `# PrepWise Custom Interview Preparation Kit\n\n`;
-    mdContent += `Generated tailored practice questions based on your resume and job description.\n\n`;
-
-    categories.forEach((cat) => {
-      mdContent += `## ${cat.label}\n\n`;
-      cat.list.forEach((q, i) => {
-        mdContent += `### Q${i + 1}: ${q.question}\n`;
-        mdContent += `**Why Interviewers Ask:** ${q.whyAsked}\n\n`;
-        mdContent += `**Suggested Strategy:** ${q.suggestedApproach}\n\n`;
-        mdContent += `**Key Points to Emphasize:**\n`;
-        q.keyPoints.forEach((pt) => {
-          mdContent += `- ${pt}\n`;
-        });
-        mdContent += `\n---\n\n`;
-      });
+    allQuestions.forEach((q, i) => {
+      content += `## ${i + 1}. ${q.question}\n\n`;
+      content += `Why Asked: ${q.whyAsked}\n\n`;
+      content += `Suggested Approach: ${q.suggestedApproach}\n\n`;
+      content += "---\n\n";
     });
 
-    const blob = new Blob([mdContent], { type: "text/markdown;charset=utf-8;" });
+    const blob = new Blob([content], {
+      type: "text/markdown",
+    });
+
     const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "PrepWise_Interview_Kit.md");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+
+    const a = document.createElement("a");
+
+    a.href = url;
+    a.download = "PrepWise-Interview-Kit.md";
+
+    a.click();
   };
 
   return (
-    <div className="relative">
-      {/* Background decoration blur */}
-      <div className="radial-glow top-10 right-10 w-[300px] h-[300px] bg-indigo-600" />
-      <div className="radial-glow bottom-20 left-10 w-[350px] h-[350px] bg-purple-600" />
+    <div className="space-y-8">
 
-      {/* Header Overview Card */}
-      <div className="glass-panel p-6 sm:p-8 rounded-3xl mb-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center border border-indigo-500/20">
-            <Sparkles className="w-6 h-6 text-indigo-400" />
-          </div>
+      {/* HEADER */}
+
+      <div className="glass-panel rounded-3xl p-8">
+        <div className="flex flex-col lg:flex-row justify-between gap-6">
+
           <div>
-            <h2 className="text-2xl font-extrabold text-zinc-100">Your Custom Interview Kit</h2>
-            <p className="text-zinc-400 text-sm mt-1">
-              40 expert-crafted, highly personalized questions across 4 domains.
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 text-xs mb-4">
+              <Sparkles className="w-4 h-4" />
+              Interview Intelligence Report
+            </div>
+
+            <h2 className="text-3xl font-black text-white">
+              Your Personalized Interview Kit
+            </h2>
+
+            <p className="text-zinc-400 mt-2">
+              Generated from resume analysis and job description matching.
             </p>
           </div>
-        </div>
 
-        {/* Global Action items */}
-        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-          <button
-            onClick={handleCopyAll}
-            className="flex-1 md:flex-none py-2.5 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 border border-zinc-700 transition cursor-pointer"
-          >
-            {copiedAll ? (
-              <>
-                <Check className="w-4 h-4 text-emerald-400" />
-                <span>Copied All</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                <span>Copy Kit</span>
-              </>
-            )}
-          </button>
+          <div className="flex gap-3 flex-wrap">
 
-          <button
-            onClick={handleDownloadMarkdown}
-            className="flex-1 md:flex-none py-2.5 px-4 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 border border-zinc-700 transition cursor-pointer"
-          >
-            <Download className="w-4 h-4" />
-            <span>Download MD</span>
-          </button>
+            <button
+              onClick={handleCopyAll}
+              className="px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-sm flex items-center gap-2"
+            >
+              {copiedAll ? (
+                <>
+                  <Check className="w-4 h-4 text-emerald-400" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  Copy Kit
+                </>
+              )}
+            </button>
 
-          <button
-            onClick={onReset}
-            className="flex-1 md:flex-none py-2.5 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-semibold flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20 transition cursor-pointer"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>Start Over</span>
-          </button>
+            <button
+              onClick={handleDownloadMarkdown}
+              className="px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-sm flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Download
+            </button>
+
+            <button
+              onClick={onReset}
+              className="px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm flex items-center gap-2"
+            >
+              <RefreshCw className="w-4 h-4" />
+              New Analysis
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Tabs list */}
-      <div className="flex flex-col lg:flex-row gap-8 items-start">
-        {/* Navigation panel */}
-        <div className="w-full lg:w-72 grid grid-cols-2 lg:flex lg:flex-col gap-2 shrink-0">
-          {(Object.keys(tabThemes) as QuestionType[]).map((tabKey) => {
-            const tab = tabThemes[tabKey];
-            const IconComponent = tab.icon;
-            const isActive = activeTab === tabKey;
+      {/* STATS */}
 
-            return (
-              <button
-                key={tabKey}
-                onClick={() => {
-                  setActiveTab(tabKey);
-                  setSearchQuery("");
-                }}
-                className={`p-4 rounded-2xl flex items-center gap-3 transition-all duration-300 text-left border cursor-pointer ${
-                  isActive
-                    ? `${tab.border} ${tab.bg} shadow-md shadow-zinc-950`
-                    : "border-zinc-900 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-zinc-800"
-                }`}
-              >
-                <div
-                  className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-                    isActive ? tab.primary + " text-white" : "bg-zinc-800 text-zinc-400"
-                  }`}
-                >
-                  <IconComponent className="w-4 h-4" />
-                </div>
-                <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-zinc-200 leading-tight">
-                    {tab.label}
-                  </h4>
-                  <p className="text-[10px] text-zinc-500 mt-0.5 font-medium">
-                    {tab.count} custom questions
-                  </p>
-                </div>
-              </button>
-            );
-          })}
+      <div className="grid md:grid-cols-3 gap-4">
+
+        <div className="glass-panel rounded-3xl p-6">
+          <Brain className="w-6 h-6 text-indigo-400 mb-4" />
+
+          <div className="text-3xl font-black">
+            {allQuestions.length}
+          </div>
+
+          <div className="text-zinc-500 text-sm mt-1">
+            Questions Generated
+          </div>
         </div>
 
-        {/* Tab content panel */}
-        <div className="flex-1 w-full flex flex-col gap-4">
-          {/* Internal search bar */}
-          <div className="relative w-full">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-4 top-1/2 -translate-y-1/2" />
+        <div className="glass-panel rounded-3xl p-6">
+          <Target className="w-6 h-6 text-purple-400 mb-4" />
+
+          <div className="text-3xl font-black">
+            {detectedSkills.length}
+          </div>
+
+          <div className="text-zinc-500 text-sm mt-1">
+            Skills Identified
+          </div>
+        </div>
+
+        <div className="glass-panel rounded-3xl p-6">
+          <Layers className="w-6 h-6 text-cyan-400 mb-4" />
+
+          <div className="text-3xl font-black">
+            4
+          </div>
+
+          <div className="text-zinc-500 text-sm mt-1">
+            Interview Categories
+          </div>
+        </div>
+
+      </div>
+
+      {/* SKILLS */}
+
+      <div className="glass-panel rounded-3xl p-6">
+        <h3 className="text-lg font-bold mb-4">
+          Detected Skills & Topics
+        </h3>
+
+        <div className="flex flex-wrap gap-2">
+          {detectedSkills.map((skill, index) => (
+            <span
+              key={index}
+              className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-300"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* MAIN */}
+
+      <div className="flex flex-col lg:flex-row gap-6">
+
+        {/* SIDEBAR */}
+
+        <div className="w-full lg:w-72 flex flex-col gap-2">
+
+          {(Object.keys(tabThemes) as QuestionType[]).map(
+            (tabKey) => {
+              const tab = tabThemes[tabKey];
+              const Icon = tab.icon;
+
+              return (
+                <button
+                  key={tabKey}
+                  onClick={() => setActiveTab(tabKey)}
+                  className={`p-4 rounded-2xl border text-left transition ${
+                    activeTab === tabKey
+                      ? `${tab.border} ${tab.bg}`
+                      : "border-zinc-800 bg-zinc-900/30"
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                        activeTab === tabKey
+                          ? tab.primary
+                          : "bg-zinc-800"
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 text-white" />
+                    </div>
+
+                    <div>
+                      <div className="font-semibold text-sm">
+                        {tab.label}
+                      </div>
+
+                      <div className="text-xs text-zinc-500">
+                        {tab.count} Questions
+                      </div>
+                    </div>
+
+                  </div>
+                </button>
+              );
+            }
+          )}
+
+        </div>
+
+        {/* QUESTIONS */}
+
+        <div className="flex-1 space-y-4">
+
+          <div className="relative">
+            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+
             <input
-              type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${activeTheme.label} questions, keywords, or topics...`}
-              className="w-full pl-11 pr-4 py-3 bg-zinc-900/30 border border-zinc-800 focus:border-zinc-700 rounded-xl text-sm placeholder-zinc-500 focus:outline-none transition duration-200 leading-none"
+              onChange={(e) =>
+                setSearchQuery(e.target.value)
+              }
+              placeholder="Search questions..."
+              className="w-full pl-11 pr-4 py-3 rounded-2xl border border-zinc-800 bg-zinc-900/40"
             />
           </div>
 
-          {/* List of cards */}
-          <div className="flex flex-col gap-4">
-            {filteredQuestions.length > 0 ? (
-              filteredQuestions.map((q, idx) => (
-                <QuestionCard
-                  key={q.id || idx}
-                  question={q}
-                  index={idx}
-                  colorTheme={activeTheme}
-                />
-              ))
-            ) : (
-              <div className="glass-panel text-center py-16 px-6 rounded-3xl">
-                <Search className="w-8 h-8 text-zinc-600 mx-auto mb-3" />
-                <h4 className="text-sm font-bold text-zinc-300">No questions match your query</h4>
-                <p className="text-xs text-zinc-500 mt-1">
-                  Try typing keywords related to skills, projects, or interview topics.
-                </p>
-              </div>
-            )}
-          </div>
+          {filteredQuestions.map((question, index) => (
+            <QuestionCard
+              key={question.id}
+              question={question}
+              index={index}
+              colorTheme={activeTheme}
+            />
+          ))}
+
         </div>
+
       </div>
     </div>
   );
