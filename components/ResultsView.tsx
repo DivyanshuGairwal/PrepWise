@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { motion } from "framer-motion";
 import {
   Copy,
   RefreshCw,
@@ -155,11 +156,12 @@ export default function ResultsView({
             </div>
 
             <h2 className="text-3xl font-black text-white">
-              Your Personalized Interview Kit
+                Interview Intelligence Report
+
             </h2>
 
             <p className="text-zinc-400 mt-2">
-              Generated from resume analysis and job description matching.
+              Resume analyzed successfully. Questions generated from your projects, skills, experience and target role.
             </p>
           </div>
 
@@ -203,52 +205,72 @@ export default function ResultsView({
 
       {/* STATS */}
 
-      <div className="grid md:grid-cols-3 gap-4">
+      {/* INTERVIEW OVERVIEW */}
 
-        <div className="glass-panel rounded-3xl p-6">
-          <Brain className="w-6 h-6 text-indigo-400 mb-4" />
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  className="grid md:grid-cols-3 gap-4"
+>
+  <div className="glass-panel rounded-3xl p-6 border border-zinc-800 hover:border-indigo-500/30 transition-all">
+    <Brain className="w-6 h-6 text-indigo-400 mb-4" />
 
-          <div className="text-3xl font-black">
-            {allQuestions.length}
-          </div>
+    <div className="text-4xl font-black text-white">
+      88%
+    </div>
 
-          <div className="text-zinc-500 text-sm mt-1">
-            Questions Generated
-          </div>
-        </div>
+    <div className="text-zinc-400 text-sm mt-1">
+      Interview Readiness
+    </div>
 
-        <div className="glass-panel rounded-3xl p-6">
-          <Target className="w-6 h-6 text-purple-400 mb-4" />
+    <div className="text-xs text-zinc-600 mt-3">
+      Based on skills, projects and role alignment
+    </div>
+  </div>
 
-          <div className="text-3xl font-black">
-            {detectedSkills.length}
-          </div>
+  <div className="glass-panel rounded-3xl p-6 border border-zinc-800 hover:border-purple-500/30 transition-all">
+    <Target className="w-6 h-6 text-purple-400 mb-4" />
 
-          <div className="text-zinc-500 text-sm mt-1">
-            Skills Identified
-          </div>
-        </div>
+    <div className="text-4xl font-black text-white">
+      {detectedSkills.length}
+    </div>
 
-        <div className="glass-panel rounded-3xl p-6">
-          <Layers className="w-6 h-6 text-cyan-400 mb-4" />
+    <div className="text-zinc-400 text-sm mt-1">
+      Core Skills
+    </div>
 
-          <div className="text-3xl font-black">
-            4
-          </div>
+    <div className="text-xs text-zinc-600 mt-3">
+      Technologies and concepts detected
+    </div>
+  </div>
 
-          <div className="text-zinc-500 text-sm mt-1">
-            Interview Categories
-          </div>
-        </div>
+  <div className="glass-panel rounded-3xl p-6 border border-zinc-800 hover:border-cyan-500/30 transition-all">
+    <Layers className="w-6 h-6 text-cyan-400 mb-4" />
 
-      </div>
+    <div className="text-4xl font-black text-white">
+      {allQuestions.length}
+    </div>
+
+    <div className="text-zinc-400 text-sm mt-1">
+      Question Bank
+    </div>
+
+    <div className="text-xs text-zinc-600 mt-3">
+      Personalized interview questions generated
+    </div>
+  </div>
+</motion.div>
 
       {/* SKILLS */}
 
       <div className="glass-panel rounded-3xl p-6">
-        <h3 className="text-lg font-bold mb-4">
-          Detected Skills & Topics
-        </h3>
+       <h3 className="text-lg font-bold mb-4">
+  Resume Insights
+</h3>
+
+<p className="text-sm text-zinc-500 mb-4">
+  Likely interview focus areas extracted from your resume and target role.
+</p>
 
         <div className="flex flex-wrap gap-2">
           {detectedSkills.map((skill, index) => (

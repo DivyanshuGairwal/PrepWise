@@ -1,5 +1,12 @@
 import React, { useRef, useState } from "react";
-import { UploadCloud, FileText, X, AlertTriangle } from "lucide-react";
+import {
+  UploadCloud,
+  FileText,
+  X,
+  AlertTriangle,
+  CheckCircle2,
+  Brain,
+} from "lucide-react";
 
 interface ResumeUploadProps {
   selectedFile: File | null;
@@ -15,9 +22,12 @@ export default function ResumeUpload({
   setError,
 }: ResumeUploadProps) {
   const [isDragOver, setIsDragOver] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (e.target.files && e.target.files.length > 0) {
       validateAndSetFile(e.target.files[0]);
     }
@@ -25,17 +35,22 @@ export default function ResumeUpload({
 
   const validateAndSetFile = (file: File) => {
     setError(null);
-    if (file.type !== "application/pdf" && !file.name.endsWith(".pdf")) {
+
+    if (
+      file.type !== "application/pdf" &&
+      !file.name.endsWith(".pdf")
+    ) {
       setError("Only PDF files are supported.");
       onFileSelect(null);
       return;
     }
-    // Limit to 5MB (sensible size for typical resumes)
+
     if (file.size > 5 * 1024 * 1024) {
       setError("File size exceeds 5MB limit.");
       onFileSelect(null);
       return;
     }
+
     onFileSelect(file);
   };
 
@@ -51,7 +66,11 @@ export default function ResumeUpload({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+
+    if (
+      e.dataTransfer.files &&
+      e.dataTransfer.files.length > 0
+    ) {
       validateAndSetFile(e.dataTransfer.files[0]);
     }
   };
@@ -59,26 +78,48 @@ export default function ResumeUpload({
   const removeFile = () => {
     onFileSelect(null);
     setError(null);
+
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+
+    const i = Math.floor(
+      Math.log(bytes) / Math.log(k)
+    );
+
+    return (
+      parseFloat(
+        (bytes / Math.pow(k, i)).toFixed(2)
+      ) +
+      " " +
+      sizes[i]
+    );
   };
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-2">
-        <label className="text-sm font-bold text-zinc-200 flex items-center gap-2">
-          <span>Upload Resume</span>
-          <span className="text-xs font-normal text-zinc-500">(PDF only, max 5MB)</span>
-        </label>
+
+      {/* Header */}
+
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+          <Brain className="w-5 h-5 text-indigo-400" />
+        </div>
+
+        <div>
+          <h3 className="font-bold text-zinc-100">
+            Resume Intelligence Input
+          </h3>
+
+          <p className="text-xs text-zinc-500">
+            PDF Resume • Max 5MB
+          </p>
+        </div>
       </div>
 
       <input
@@ -87,7 +128,6 @@ export default function ResumeUpload({
         onChange={handleFileChange}
         accept=".pdf,application/pdf"
         className="hidden"
-        id="resume-file-input"
       />
 
       {!selectedFile ? (
@@ -95,55 +135,106 @@ export default function ResumeUpload({
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
-          className={`flex-1 min-h-[200px] flex flex-col items-center justify-center border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition duration-300 ${
+          onClick={() =>
+            fileInputRef.current?.click()
+          }
+          className={`flex-1 min-h-[260px] rounded-3xl border cursor-pointer transition-all duration-300 p-8 flex flex-col justify-center items-center text-center ${
             isDragOver
-              ? "border-indigo-500 bg-indigo-500/10 shadow-lg shadow-indigo-500/10"
-              : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 hover:bg-zinc-900/60"
+              ? "border-indigo-500 bg-indigo-500/10"
+              : "border-zinc-800 bg-zinc-900/40 hover:border-zinc-700"
           }`}
         >
-          <div className="w-12 h-12 rounded-full bg-zinc-800 flex items-center justify-center mb-4">
-            <UploadCloud className="w-6 h-6 text-zinc-400" />
+          <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mb-5">
+            <UploadCloud className="w-8 h-8 text-zinc-400" />
           </div>
-          <p className="text-zinc-200 font-semibold text-sm mb-1">
-            Drag & drop your resume PDF here
+
+          <h4 className="font-semibold text-zinc-100">
+            Upload Resume Dataset
+          </h4>
+
+          <p className="text-sm text-zinc-500 mt-2 max-w-xs">
+            Drag & drop your resume PDF or click
+            to browse local files.
           </p>
-          <p className="text-zinc-500 text-xs mb-3">or click to browse local files</p>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-zinc-800 text-zinc-300">
-            PDF Support
-          </span>
+
+          <div className="mt-6 flex gap-2 flex-wrap justify-center">
+            <span className="px-3 py-1 rounded-full bg-zinc-800 text-xs text-zinc-400">
+              PDF
+            </span>
+
+            <span className="px-3 py-1 rounded-full bg-zinc-800 text-xs text-zinc-400">
+              Resume Parsing
+            </span>
+
+            <span className="px-3 py-1 rounded-full bg-zinc-800 text-xs text-zinc-400">
+              Skill Extraction
+            </span>
+          </div>
         </div>
       ) : (
-        <div className="flex-1 flex flex-col justify-between border border-indigo-500/30 bg-indigo-950/10 rounded-2xl p-5 relative">
+        <div className="flex-1 rounded-3xl border border-emerald-500/20 bg-emerald-500/[0.03] p-6 relative">
+
           <button
             onClick={removeFile}
-            className="absolute top-4 right-4 p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-zinc-200 transition cursor-pointer"
-            title="Remove file"
+            className="absolute top-5 right-5 p-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 transition"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 text-zinc-300" />
           </button>
 
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/15 flex items-center justify-center shrink-0">
-              <FileText className="w-6 h-6 text-indigo-400" />
+
+            <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
+              <FileText className="w-7 h-7 text-emerald-400" />
             </div>
-            <div className="min-w-0 pr-6">
-              <h4 className="text-sm font-semibold text-zinc-100 truncate">
+
+            <div className="flex-1">
+
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+
+                <span className="text-sm font-semibold text-emerald-400">
+                  Resume Loaded Successfully
+                </span>
+              </div>
+
+              <h4 className="font-semibold text-zinc-100 truncate">
                 {selectedFile.name}
               </h4>
-              <p className="text-xs text-zinc-500 mt-0.5">
+
+              <p className="text-xs text-zinc-500 mt-1">
                 {formatFileSize(selectedFile.size)}
               </p>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-medium bg-indigo-500/20 text-indigo-300 mt-2">
-                Ready to analyze
-              </span>
+
+              <div className="grid grid-cols-2 gap-2 mt-5">
+
+                <div className="rounded-xl border border-zinc-800 p-3">
+                  <div className="text-xs text-zinc-500">
+                    Status
+                  </div>
+
+                  <div className="text-sm font-medium text-zinc-200 mt-1">
+                    Ready
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-zinc-800 p-3">
+                  <div className="text-xs text-zinc-500">
+                    Parsing
+                  </div>
+
+                  <div className="text-sm font-medium text-zinc-200 mt-1">
+                    Enabled
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
       )}
 
       {error && (
-        <div className="flex items-start gap-2 mt-3 p-3 bg-red-950/20 border border-red-500/30 rounded-xl text-red-400 text-xs">
+        <div className="flex items-start gap-2 mt-4 p-3 bg-red-950/20 border border-red-500/30 rounded-xl text-red-400 text-xs">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>

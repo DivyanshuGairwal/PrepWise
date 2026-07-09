@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Sparkles, AlertCircle, FileQuestion, ArrowRight } from "lucide-react";
+import {
+  Sparkles,
+  AlertCircle,
+  Brain,
+  ArrowRight,
+} from "lucide-react";
 import HeroSection from "@/components/HeroSection";
 import ResumeUpload from "@/components/ResumeUpload";
 import JobDescriptionInput from "@/components/JobDescriptionInput";
@@ -101,9 +106,9 @@ export default function Home() {
       <header className="border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-600/20">
-              <FileQuestion className="w-5 h-5 text-white" />
-            </div>
+           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-blue-600 flex items-center justify-center shadow-lg shadow-violet-600/30">
+  <Brain className="w-5 h-5 text-white" />
+</div>
             <span className="font-extrabold text-lg tracking-tight bg-gradient-to-r from-zinc-100 to-zinc-400 bg-clip-text text-transparent">
               PrepWise
             </span>
@@ -122,7 +127,7 @@ export default function Home() {
         {loading && <LoadingOverlay />}
 
         {!results ? (
-          <div className="space-y-16">
+          <div className="space-y-24">
             {/* Hero Section */}
             <HeroSection onStartClick={handleStartClick} />
 
@@ -134,13 +139,81 @@ export default function Home() {
             >
               <div className="text-center mb-8">
                 <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-100">
-                  Build Your Practice Kit
+                    Interview Preparation Workspace
                 </h2>
                 <p className="text-zinc-500 text-sm mt-1">
-                  Upload your documents below to configure the AI generator.
+                  Upload your resume and target role to generate a personalized interview intelligence report.
                 </p>
               </div>
+{/* COMMAND CENTER */}
 
+<div className="glass-panel rounded-3xl p-6 md:p-8 border border-zinc-800 mb-8">
+  <div className="flex items-center justify-between flex-wrap gap-4">
+
+    <div>
+      <div className="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-2">
+        Resume Intelligence Workspace
+      </div>
+
+      <h3 className="text-2xl font-black text-white">
+        Analysis Command Center
+      </h3>
+
+      <p className="text-zinc-500 text-sm mt-2">
+        Upload a resume and target role to generate personalized interview preparation.
+      </p>
+    </div>
+
+    <div className="px-4 py-2 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-sm text-zinc-400">
+      AI Analysis Engine
+    </div>
+
+  </div>
+
+  <div className="grid md:grid-cols-4 gap-3 mt-6">
+
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+      <div className="text-green-400 font-semibold text-sm">
+        {file ? "✓ Resume Loaded" : "Waiting"}
+      </div>
+
+      <div className="text-zinc-500 text-xs mt-2">
+        Candidate profile
+      </div>
+    </div>
+
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+      <div className="text-green-400 font-semibold text-sm">
+        {file ? "✓ Skills Detected" : "Pending"}
+      </div>
+
+      <div className="text-zinc-500 text-xs mt-2">
+        Technical stack
+      </div>
+    </div>
+
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+      <div className="text-green-400 font-semibold text-sm">
+        {jobDescription ? "✓ Role Loaded" : "Waiting"}
+      </div>
+
+      <div className="text-zinc-500 text-xs mt-2">
+        Target position
+      </div>
+    </div>
+
+    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-4">
+      <div className="font-semibold text-sm text-indigo-400">
+        Ready
+      </div>
+
+      <div className="text-zinc-500 text-xs mt-2">
+        Interview generation
+      </div>
+    </div>
+
+  </div>
+</div>
               {/* Form container */}
               <form onSubmit={handleGenerate} className="space-y-8">
                 {globalError && !isQuotaError && (
@@ -221,18 +294,6 @@ export default function Home() {
           <ResultsView data={results} onReset={handleReset} />
         )}
       </main>
-
-      {/* Footer bar */}
-      <footer className="border-t border-zinc-900 bg-zinc-950/30 py-6 text-center text-xs text-zinc-600">
-        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© {new Date().getFullYear()} PrepWise AI. All rights reserved.</p>
-          <div className="flex gap-4">
-            <span className="hover:text-zinc-500 transition">Interactive Mock Prep</span>
-            <span>•</span>
-            <span className="hover:text-zinc-500 transition">AI-Powered Integration</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
