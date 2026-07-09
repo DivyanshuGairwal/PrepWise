@@ -1,61 +1,167 @@
-import React, { useState, useEffect } from "react";
-import { Loader2, Sparkles, Cpu, Eye, ShieldCheck, Target } from "lucide-react";
+"use client";
 
-const TIPS = [
-  { text: "Reading and extracting text structure from your PDF resume...", icon: Cpu },
-  { text: "Mapping candidate skills and experiences against job keywords...", icon: Target },
-  { text: "Generating 10 custom Technical questions for systems & domains...", icon: Sparkles },
-  { text: "Designing 10 Resume-based questions targeting specific projects...", icon: Eye },
-  { text: "Structuring 10 Behavioral questions based on required soft skills...", icon: ShieldCheck },
-  { text: "Drafting 10 HR alignment questions for expectations & goals...", icon: Target },
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  FileText,
+  Brain,
+  Target,
+  Sparkles,
+  CheckCircle2,
+} from "lucide-react";
+
+const STEPS = [
+  {
+    label: "Parsing Resume",
+    icon: FileText,
+  },
+  {
+    label: "Extracting Skills",
+    icon: Brain,
+  },
+  {
+    label: "Matching Job Profile",
+    icon: Target,
+  },
+  {
+    label: "Generating Questions",
+    icon: Sparkles,
+  },
+  {
+    label: "Building Intelligence Report",
+    icon: CheckCircle2,
+  },
 ];
 
 export default function LoadingOverlay() {
-  const [tipIndex, setTipIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTipIndex((prev) => (prev + 1) % TIPS.length);
-    }, 3000);
+      setProgress((prev) => {
+        if (prev >= 100) return 100;
+        return prev + 1;
+      });
+    }, 180);
 
     return () => clearInterval(interval);
   }, []);
 
-  const ActiveIcon = TIPS[tipIndex].icon;
+  const activeStep = Math.min(
+    Math.floor(progress / 20),
+    STEPS.length - 1
+  );
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 bg-zinc-950/80 backdrop-blur-md">
-      <div className="radial-glow w-[350px] h-[350px] bg-indigo-600 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-25" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/90 backdrop-blur-xl">
+      <motion.div
+        initial={{
+          opacity: 0,
+          scale: 0.95,
+        }}
+        animate={{
+          opacity: 1,
+          scale: 1,
+        }}
+        className="w-full max-w-xl mx-6"
+      >
+        <div className="glass-panel rounded-3xl p-8 border border-zinc-800">
 
-      <div className="glass-panel p-8 sm:p-10 rounded-3xl max-w-md w-full text-center relative border border-indigo-500/20 shadow-2xl shadow-indigo-500/5">
-        {/* Glowing Spinner */}
-        <div className="relative w-20 h-20 mx-auto mb-6">
-          <div className="absolute inset-0 rounded-full border-4 border-indigo-500/10" />
-          <Loader2 className="w-20 h-20 text-indigo-500 animate-spin absolute inset-0" />
-        </div>
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-blue-600 flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
 
-        {/* Loading Header */}
-        <h3 className="text-xl font-bold text-zinc-100 mb-2">Generating Interview Kit</h3>
-        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-6">
-          Analyzing resume + Job description
-        </p>
+            <div>
+              <h3 className="text-xl font-bold text-white">
+                Building Your Report
+              </h3>
 
-        {/* Dynamic Tip / Step Progress Indicator */}
-        <div className="min-h-[80px] p-4 bg-zinc-900/50 border border-zinc-800/80 rounded-2xl flex flex-col justify-center items-center transition-all duration-300">
-          <div className="w-8 h-8 rounded-full bg-indigo-500/15 flex items-center justify-center mb-2.5">
-            <ActiveIcon className="w-4 h-4 text-indigo-400 animate-bounce" />
+              <p className="text-sm text-zinc-500">
+                Interview Intelligence Engine
+              </p>
+            </div>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-300 font-medium leading-relaxed max-w-[280px]">
-            {TIPS[tipIndex].text}
-          </p>
-        </div>
 
-        {/* Wait disclaimer */}
-        <p className="text-[10px] text-zinc-600 mt-6 leading-relaxed">
-          This may take up to 20-30 seconds depending on network load. <br />
-          AI-Powered Analysis is constructing 40 comprehensive questions.
-        </p>
-      </div>
+          <div className="space-y-4">
+
+            {STEPS.map((step, index) => {
+              const Icon = step.icon;
+
+              const completed =
+                index < activeStep;
+
+              const active =
+                index === activeStep;
+
+              return (
+                <motion.div
+                  key={step.label}
+                  className={`flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300 ${
+                    completed
+                      ? "border-green-500/20 bg-green-500/5"
+                      : active
+                      ? "border-indigo-500/30 bg-indigo-500/5"
+                      : "border-zinc-800 bg-zinc-900/40"
+                  }`}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                      completed
+                        ? "bg-green-500/15"
+                        : active
+                        ? "bg-indigo-500/15"
+                        : "bg-zinc-800"
+                    }`}
+                  >
+                    <Icon
+                      className={`w-5 h-5 ${
+                        completed
+                          ? "text-green-400"
+                          : active
+                          ? "text-indigo-400"
+                          : "text-zinc-500"
+                      }`}
+                    />
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="text-sm font-medium text-white">
+                      {step.label}
+                    </div>
+                  </div>
+
+                  {completed && (
+                    <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="mt-8">
+            <div className="flex justify-between text-xs text-zinc-500 mb-2">
+              <span>Progress</span>
+              <span>{progress}%</span>
+            </div>
+
+            <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
+              <motion.div
+                className="h-full bg-gradient-to-r from-violet-500 via-indigo-500 to-blue-500"
+                animate={{
+                  width: `${progress}%`,
+                }}
+              />
+            </div>
+          </div>
+
+          <p className="text-center text-xs text-zinc-600 mt-6">
+            Analyzing resume, matching role requirements and generating
+            personalized interview questions.
+          </p>
+
+        </div>
+      </motion.div>
     </div>
   );
 }

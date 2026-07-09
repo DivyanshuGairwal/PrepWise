@@ -1,22 +1,40 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function HeroSection() {
   const router = useRouter();
+  const [leaving, setLeaving] = useState(false);
+
+  const handleNavigate = () => {
+    setLeaving(true);
+
+    setTimeout(() => {
+      router.push("/workspace");
+    }, 350);
+  };
 
   return (
     <section className="relative overflow-hidden pt-24 pb-28">
-
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08),transparent_55%)]" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
-
+      <motion.div
+        className="relative max-w-7xl mx-auto px-6"
+        animate={{
+          opacity: leaving ? 0 : 1,
+          y: leaving ? -30 : 0,
+          scale: leaving ? 0.98 : 1,
+        }}
+        transition={{
+          duration: 0.3,
+          ease: "easeInOut",
+        }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -53,8 +71,14 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-center mt-10"
         >
-          <button
-            onClick={() => router.push("/workspace")}
+          <motion.button
+            whileHover={{
+              scale: 1.02,
+            }}
+            whileTap={{
+              scale: 0.97,
+            }}
+            onClick={handleNavigate}
             className="
             group
             px-10 py-5
@@ -74,10 +98,9 @@ export default function HeroSection() {
             Analyze My Resume
 
             <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
+          </motion.button>
         </motion.div>
-
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -14,7 +14,7 @@ import ResultsView from "@/components/ResultsView";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { AnalysisResult, AnalysisResponse } from "@/types";
 
-export default function Home() {
+export default function WorkspacePage() {
   const [file, setFile] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -145,6 +145,7 @@ export default function Home() {
                   Upload your resume and target role to generate a personalized interview intelligence report.
                 </p>
               </div>
+  
 {/* COMMAND CENTER */}
 
 <div className="glass-panel rounded-3xl p-6 md:p-8 border border-zinc-800 mb-8">
@@ -280,19 +281,23 @@ export default function Home() {
                 <div className="flex justify-center pt-2">
                   <button
   type="submit"
-  className="
-  w-full sm:w-auto
-  px-10 py-5
-  rounded-2xl
-  border border-white/10
-  bg-white
-  text-black
-  font-semibold
-  hover:scale-[1.02]
-  transition-all duration-300
-  flex items-center justify-center gap-2
-  shadow-[0_20px_80px_rgba(255,255,255,0.08)]
-  cursor-pointer
+ className="
+group
+relative
+overflow-hidden
+px-8 py-4
+rounded-2xl
+bg-gradient-to-b
+from-zinc-800
+to-zinc-900
+border border-zinc-700
+text-white
+font-semibold
+transition-all duration-300
+hover:border-zinc-500
+hover:-translate-y-0.5
+hover:shadow-[0_20px_50px_rgba(0,0,0,0.35)]
+active:scale-[0.98]
 "
 >
                     <span>Generate Intelligence Report</span>

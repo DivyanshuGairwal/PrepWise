@@ -17,20 +17,14 @@ export const metadata: Metadata = {
   title: "PrepWise",
   description: "AI-powered interview preparation platform that generates personalized technical, behavioral, resume, and HR questions from resumes and job descriptions",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) { 
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}
-        <Analytics/>
-      </body>
+    <html lang="en" data-scroll-behavior="smooth">
+      <body>{children}</body>
     </html>
   );
 }
