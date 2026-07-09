@@ -74,11 +74,11 @@ export default function LoadingOverlay() {
 
             <div>
               <h3 className="text-xl font-bold text-white">
-                Building Your Report
+                Generating Your Interview Questions
               </h3>
 
               <p className="text-sm text-zinc-500">
-                Interview Intelligence Engine
+                Preparing Personalized Questions
               </p>
             </div>
           </div>

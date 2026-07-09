@@ -153,16 +153,16 @@ export default function ResultsView({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/20 bg-indigo-500/10 text-indigo-300 text-xs mb-4">
               <Sparkles className="w-4 h-4" />
-              Interview Intelligence Report
+              Interview Prep Report
             </div>
 
             <h2 className="text-3xl font-black text-white">
-                Interview Intelligence Report
+                    Interview Prep Report
 
             </h2>
 
             <p className="text-zinc-400 mt-2">
-              Resume analyzed successfully. Questions generated from your projects, skills, experience and target role.
+              Your resume and job description were analyzed to create personalized interview questions and preparation insights.
             </p>
           </div>
 

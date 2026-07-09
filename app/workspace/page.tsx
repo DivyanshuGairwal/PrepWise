@@ -119,9 +119,6 @@ export default function WorkspacePage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-[10px] sm:text-xs font-semibold px-2.5 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-400">
-              MVP Release
-            </span>
           </div>
         </div>
       </header>
@@ -157,11 +154,11 @@ export default function WorkspacePage() {
 
     <div>
       <div className="text-xs uppercase tracking-[0.2em] text-zinc-500 mb-2">
-        Resume Intelligence Workspace
+        Your Resume
       </div>
 
       <h3 className="text-2xl font-black text-white">
-        Analysis Command Center
+        Interview Setup
       </h3>
 
       <p className="text-zinc-500 text-sm mt-2">
@@ -170,7 +167,7 @@ export default function WorkspacePage() {
     </div>
 
     <div className="px-4 py-2 rounded-2xl border border-zinc-800 bg-zinc-900/60 text-sm text-zinc-400">
-      AI Analysis Engine
+      Ready to Analyze
     </div>
 
   </div>
