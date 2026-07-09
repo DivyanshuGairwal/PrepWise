@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 import {
   Copy,
@@ -46,8 +47,18 @@ export default function QuestionCard({
   };
 
   return (
-    <div
-      className={`border rounded-3xl bg-zinc-900/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-zinc-700 ${
+   <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{
+    delay: index * 0.05,
+    duration: 0.4,
+  }}
+  whileHover={{
+    y: -4,
+    scale: 1.01,
+  }}
+  className={`border rounded-3xl bg-zinc-900/60 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/30 ${
         isOpen
           ? `${colorTheme.border} shadow-xl shadow-black/20`
           : "border-zinc-800"
@@ -176,6 +187,6 @@ export default function QuestionCard({
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

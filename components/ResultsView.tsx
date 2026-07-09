@@ -268,11 +268,11 @@ export default function ResultsView({
 
       <div className="glass-panel rounded-3xl p-6">
        <h3 className="text-lg font-bold mb-4">
-  Resume Insights
+  Interview Focus Areas
 </h3>
 
 <p className="text-sm text-zinc-500 mb-4">
-  Likely interview focus areas extracted from your resume and target role.
+  Topics most likely to be discussed based on your resume and target role.
 </p>
 
         <div className="flex flex-wrap gap-2">
@@ -306,8 +306,8 @@ export default function ResultsView({
                   onClick={() => setActiveTab(tabKey)}
                   className={`p-4 rounded-2xl border text-left transition ${
                     activeTab === tabKey
-                      ? `${tab.border} ${tab.bg}`
-                      : "border-zinc-800 bg-zinc-900/30"
+                      ? `${tab.border} ${tab.bg} shadow-lg shadow-indigo-500/10`
+                      : "border-zinc-800 bg-white/[0.02] backdrop-blur-xl"
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -353,7 +353,7 @@ export default function ResultsView({
                 setSearchQuery(e.target.value)
               }
               placeholder="Search questions..."
-              className="w-full pl-11 pr-4 py-3 rounded-2xl border border-zinc-800 bg-zinc-900/40"
+              className="w-full pl-11 pr-4 py-4 rounded-2xl border border-zinc-800 bg-white/[0.02] backdrop-blur-xl focus:border-indigo-500 transition-all"
             />
           </div>
 

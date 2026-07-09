@@ -101,7 +101,11 @@ export default function WorkspacePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between selection:bg-indigo-500/35 selection:text-white">
+    <div className="min-h-screen flex flex-col justify-between selection:bg-indigo-500/35 selection:text-white relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+  <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-violet-600/10 blur-[180px]" />
+  <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-cyan-600/10 blur-[180px]" />
+</div>
       {/* Header bar */}
       <header className="border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
