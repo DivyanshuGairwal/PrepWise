@@ -1,3 +1,4 @@
+import AnimatedCounter from "./AnimatedCounter";
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import {
@@ -216,7 +217,9 @@ export default function ResultsView({
     <Brain className="w-6 h-6 text-indigo-400 mb-4" />
 
     <div className="text-4xl font-black text-white">
-      88%
+      <>
+  <AnimatedCounter value={88} />%
+</>
     </div>
 
     <div className="text-zinc-400 text-sm mt-1">
@@ -232,7 +235,7 @@ export default function ResultsView({
     <Target className="w-6 h-6 text-purple-400 mb-4" />
 
     <div className="text-4xl font-black text-white">
-      {detectedSkills.length}
+      <AnimatedCounter value={detectedSkills.length} />
     </div>
 
     <div className="text-zinc-400 text-sm mt-1">
@@ -248,7 +251,7 @@ export default function ResultsView({
     <Layers className="w-6 h-6 text-cyan-400 mb-4" />
 
     <div className="text-4xl font-black text-white">
-      {allQuestions.length}
+      <AnimatedCounter value={allQuestions.length} />
     </div>
 
     <div className="text-zinc-400 text-sm mt-1">
