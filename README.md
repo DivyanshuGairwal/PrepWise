@@ -9,60 +9,74 @@ Instead of practicing generic interview questions, users receive role-specific a
 ## Features
 
 ### Resume Analysis
-- Upload resume in PDF format
-- Extracts skills, technologies, projects, and experience
-- Identifies likely interview focus areas
+
+* Upload resume in PDF format
+* Extract skills, technologies, projects, and experience
+* Identify likely interview focus areas
 
 ### Job Description Matching
-- Analyze target role requirements
-- Understand expected technologies and responsibilities
-- Generate role-relevant interview questions
+
+* Analyze target role requirements
+* Understand expected technologies and responsibilities
+* Generate role-relevant interview questions
 
 ### Personalized Interview Preparation
-- Technical Questions
-- Resume-Based Questions
-- Behavioral Questions
-- HR & Culture Fit Questions
+
+* Technical Questions
+* Resume-Based Questions
+* Behavioral Questions
+* HR & Culture Fit Questions
 
 ### Interactive Experience
-- Modern dashboard UI
-- Question search and filtering
-- Copy interview questions instantly
-- Download generated interview kit
-- Practice answer workspace
+
+* Modern dashboard UI
+* Search and filter interview questions
+* Expandable question cards
+* Focus area insights
+* Interview readiness indicators
+* Structured interview preparation report
 
 ---
 
 ## How It Works
 
-1. Upload your resume
+1. Upload your resume (PDF)
 2. Paste the target job description
-3. PrepWise analyzes both inputs
-4. AI generates personalized interview questions
-5. Practice using structured guidance and key discussion points
+3. PrepWise extracts and analyzes resume content
+4. AI compares your profile against the target role
+5. Personalized interview questions are generated
+6. Receive a complete Interview Prep Report
 
 ---
 
 ## Tech Stack
 
 ### Frontend
-- Next.js 15
-- React
-- TypeScript
-- Tailwind CSS
-- Framer Motion
+
+* Next.js 16
+* React
+* TypeScript
+* Tailwind CSS
+* Framer Motion
 
 ### Backend
-- Next.js API Routes
 
-### AI
-- Google Gemini API
+* Next.js API Routes
+
+### AI Layer
+
+* OpenRouter API
+* GPT OSS Models
+* Gemma Models
+* Multi-model fallback system
 
 ### File Processing
-- PDF Parse
+
+* pdf-parse
 
 ### Icons
-- Lucide React
+
+* Lucide React
 
 ---
 
@@ -76,10 +90,9 @@ Instead of practicing generic interview questions, users receive role-specific a
 
 <img width="100%" alt="Interview Setup" src="./Screenshot/Interview_Setup.png" />
 
-### Progress 
+### Progress
 
-<img width="100%" alt="Interview Report" src="./Screenshot/Progress.png" />
-
+<img width="100%" alt="Progress" src="./Screenshot/Progress.png" />
 
 ### Interview Report
 
@@ -95,7 +108,7 @@ Clone the repository:
 git clone https://github.com/YOUR_USERNAME/prepwise.git
 ```
 
-Navigate to project directory:
+Navigate to the project directory:
 
 ```bash
 cd prepwise
@@ -107,7 +120,7 @@ Install dependencies:
 npm install
 ```
 
-Create environment file:
+Create an environment file:
 
 ```bash
 .env.local
@@ -116,10 +129,10 @@ Create environment file:
 Add your API key:
 
 ```env
-GEMINI_API_KEY=your_api_key_here
+OPENROUTER_API_KEY=your_api_key_here
 ```
 
-Run locally:
+Run the development server:
 
 ```bash
 npm run dev
@@ -138,8 +151,13 @@ http://localhost:3000
 ```txt
 app/
 ├── page.tsx
+│
 ├── workspace/
 │   └── page.tsx
+│
+├── api/
+│   └── analyze/
+│       └── route.ts
 
 components/
 ├── HeroSection.tsx
@@ -148,37 +166,47 @@ components/
 ├── LoadingOverlay.tsx
 ├── ResultsView.tsx
 ├── QuestionCard.tsx
+├── AnimatedCounter.tsx
+├── PageTransition.tsx
 
 lib/
 ├── ai.ts
 ├── pdf.ts
+
+types/
+├── index.ts
 ```
 
 ---
 
 ## Future Improvements
 
-- Real role match scoring
-- AI-generated interview feedback
-- Mock interview mode
-- Voice-based interview practice
-- Company-specific interview preparation
-- Progress tracking and analytics
+* Real role match scoring
+* AI-generated interview summary
+* Mock interview mode
+* Voice interview practice
+* Company-specific interview preparation
+* Progress tracking and analytics
+* Interview answer evaluation
+* Personalized improvement suggestions
 
 ---
 
 ## Motivation
 
-Interview preparation is often generic and repetitive.
+Most interview preparation platforms provide generic questions that do not reflect a candidate's actual background or the role they are targeting.
 
-PrepWise was built to help candidates prepare for interviews using questions that are actually relevant to their background and target role, making preparation more focused, practical, and effective.
+PrepWise was built to bridge that gap by combining resume analysis and job description analysis to generate personalized interview questions, helping candidates prepare more efficiently and confidently.
 
 ---
 
 ## Author
 
 **Divyanshu Gairwal**
-Computer science Graduate
+
+Computer Science Graduate
+
+GitHub: https://github.com/DivyanshuGairwal
 
 ---
 
