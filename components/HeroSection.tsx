@@ -33,25 +33,6 @@ export default function HeroSection() {
 
   const [leaving, setLeaving] = useState(false);
 
-  const [mousePosition, setMousePosition] = useState({
-    x: 0,
-    y: 0,
-  });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: e.clientX,
-        y: e.clientY,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
 
   const handleNavigate = () => {
     setLeaving(true);
@@ -62,28 +43,12 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-32 min-h-[85vh]">
+    <section className="relative overflow-hidden pt-24 pb-8 min-h-[75vh]">
       {/* Mouse Spotlight */}
-
-      <motion.div
-        className="pointer-events-none absolute inset-0 z-0"
-        animate={{
-          background: `radial-gradient(
-            500px circle at ${mousePosition.x}px ${mousePosition.y}px,
-            rgba(99,102,241,0.15),
-            transparent 70%
-          )`,
-        }}
-        transition={{
-          duration: 0.15,
-        }}
-      />
 
       {/* Ambient Glow */}
 
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.10),transparent_60%)]" />
-      </div>
+
 
       {/* Floating Cards */}
 
