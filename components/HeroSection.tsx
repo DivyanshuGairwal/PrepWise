@@ -1,13 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+const cards = [
+  {
+    title: "SYSTEM DESIGN",
+    text: "How would you scale this to 10M users?",
+    className: "top-16 left-10 -rotate-6",
+  },
+  {
+    title: "BEHAVIORAL",
+    text: "Tell me about a conflict with a teammate.",
+    className: "top-24 right-10 rotate-6",
+  },
+  {
+    title: "TECHNICAL",
+    text: "Walk me through the trade-offs in this design.",
+    className: "bottom-32 left-20 rotate-3",
+  },
+  {
+    title: "FOLLOW-UP",
+    text: "Why did you leave this role after 8 months?",
+    className: "bottom-24 right-20 -rotate-3",
+  },
+];
+
 export default function HeroSection() {
   const router = useRouter();
+
   const [leaving, setLeaving] = useState(false);
+
+  const [mousePosition, setMousePosition] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: e.clientX,
+        y: e.clientY,
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   const handleNavigate = () => {
     setLeaving(true);
@@ -18,13 +62,92 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-28">
+    <section className="relative overflow-hidden pt-24 pb-32 min-h-[85vh]">
+      {/* Mouse Spotlight */}
+
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-0"
+        animate={{
+          background: `radial-gradient(
+            500px circle at ${mousePosition.x}px ${mousePosition.y}px,
+            rgba(99,102,241,0.15),
+            transparent 70%
+          )`,
+        }}
+        transition={{
+          duration: 0.15,
+        }}
+      />
+
+      {/* Ambient Glow */}
+
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.08),transparent_55%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.10),transparent_60%)]" />
+      </div>
+
+      {/* Floating Cards */}
+
+      <div className="hidden xl:block">
+        {cards.map((card, index) => (
+          <motion.div
+            key={index}
+            className={`absolute ${card.className} z-10`}
+            initial={{
+              opacity: 0,
+              scale: 0.8,
+              filter: "blur(10px)",
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              filter: "blur(0px)",
+              y: [0, -12, 0],
+            }}
+            transition={{
+              opacity: {
+                duration: 0.8,
+                delay: index * 0.15,
+              },
+              scale: {
+                duration: 0.8,
+                delay: index * 0.15,
+              },
+              y: {
+                duration: 6 + index,
+                repeat: Infinity,
+                ease: "easeInOut",
+              },
+            }}
+          >
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                y: -8,
+              }}
+              className="
+                w-64
+                rounded-2xl
+                border
+                border-white/10
+                bg-white/[0.03]
+                backdrop-blur-xl
+                p-4
+              "
+            >
+              <p className="text-xs tracking-widest text-indigo-400 font-medium">
+                {card.title}
+              </p>
+
+              <p className="mt-2 text-sm text-zinc-300">
+                {card.text}
+              </p>
+            </motion.div>
+          </motion.div>
+        ))}
       </div>
 
       <motion.div
-        className="relative max-w-7xl mx-auto px-6"
+        className="relative z-20 max-w-7xl mx-auto px-6"
         animate={{
           opacity: leaving ? 0 : 1,
           y: leaving ? -30 : 0,
@@ -35,6 +158,8 @@ export default function HeroSection() {
           ease: "easeInOut",
         }}
       >
+        {/* Badge */}
+
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -46,53 +171,121 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mt-10"
-        >
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-[0.95] text-white">
-            Know Every Question
-            <br />
-            <span className="text-zinc-400">
-              Before The Interview Starts
-            </span>
-          </h1>
+        {/* Heading */}
 
-          <p className="max-w-2xl mx-auto mt-8 text-lg text-zinc-500 leading-relaxed">
-            Upload your resume and a job description. PrepWise analyzes your
-            experience, identifies likely interview focus areas, and generates
-            realistic questions tailored to the exact role you're applying for.
-          </p>
-        </motion.div>
+        <div className="text-center mt-10">
+          <motion.h1
+            initial={{
+              opacity: 0,
+              y: 40,
+              filter: "blur(12px)",
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+            }}
+            transition={{
+              duration: 1,
+            }}
+            className="
+              text-5xl
+              md:text-7xl
+              font-black
+              tracking-tight
+              leading-[0.95]
+            "
+          >
+            <motion.span
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              Know Every Question
+            </motion.span>
+
+            <br />
+
+            <motion.span
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.2,
+              }}
+              className="
+                bg-gradient-to-r
+                from-white
+                via-zinc-300
+                to-indigo-400
+                bg-clip-text
+                text-transparent
+              "
+            >
+              Before The Interview Starts
+            </motion.span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              delay: 0.3,
+            }}
+            className="
+              max-w-2xl
+              mx-auto
+              mt-8
+              text-lg
+              text-zinc-500
+              leading-relaxed
+            "
+          >
+            Upload your resume and a job description. PrepWise analyzes
+            your experience, identifies likely interview focus areas,
+            and generates realistic questions tailored to the exact role
+            you're applying for.
+          </motion.p>
+        </div>
+
+        {/* CTA */}
 
         <motion.div
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{
+            delay: 0.4,
+          }}
           className="flex justify-center mt-10"
         >
           <motion.button
             whileHover={{
-              scale: 1.02,
+              scale: 1.05,
+              y: -5,
+              boxShadow:
+                "0px 0px 80px rgba(99,102,241,0.35)",
             }}
             whileTap={{
               scale: 0.97,
             }}
             onClick={handleNavigate}
             className="
-            group
-            px-10 py-5
-            rounded-2xl
-            border border-white/10
-            bg-white/5
-            backdrop-blur-xl
-            text-white
-            font-semibold
-            hover:bg-white/10
-            hover:border-white/20
-            transition-all duration-300
-            shadow-[0_0_40px_rgba(99,102,241,0.15)]
-            flex items-center gap-3
+              group
+              px-10
+              py-5
+              rounded-2xl
+              border
+              border-white/10
+              bg-white/5
+              backdrop-blur-xl
+              text-white
+              font-semibold
+              hover:bg-white/10
+              hover:border-white/20
+              transition-all
+              duration-300
+              shadow-[0_0_60px_rgba(99,102,241,0.25)]
+              flex
+              items-center
+              gap-3
             "
           >
             Analyze My Resume
