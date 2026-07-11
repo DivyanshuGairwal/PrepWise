@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, {useEffect,useState,useRef,} from "react";
+import { motion } from "framer-motion";
 import {
   Sparkles,
   AlertCircle,
@@ -14,7 +15,30 @@ import ResultsView from "@/components/ResultsView";
 import LoadingOverlay from "@/components/LoadingOverlay";
 import { AnalysisResult, AnalysisResponse } from "@/types";
 
+
 export default function WorkspacePage() {
+  const [mousePosition, setMousePosition] = useState({
+  x: 0,
+  y: 0,
+});
+
+useEffect(() => {
+  const handleMouseMove = (e: MouseEvent) => {
+    setMousePosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
+
+  window.addEventListener("mousemove", handleMouseMove);
+
+  return () => {
+    window.removeEventListener(
+      "mousemove",
+      handleMouseMove
+    );
+  };
+}, []);
   const [file, setFile] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -125,6 +149,19 @@ export default function WorkspacePage() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <motion.div
+  className="pointer-events-none absolute inset-0 z-0"
+  animate={{
+    background: `radial-gradient(
+      600px circle at ${mousePosition.x}px ${mousePosition.y}px,
+      rgba(99,102,241,0.12),
+      transparent 70%
+    )`,
+  }}
+  transition={{
+    duration: 0.12,
+  }}
+/>
         {loading && <LoadingOverlay />}
 
         {!results ? (
