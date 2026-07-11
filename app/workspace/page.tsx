@@ -42,6 +42,7 @@ useEffect(() => {
   const [file, setFile] = useState<File | null>(null);
   const [jobDescription, setJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [analysisComplete, setAnalysisComplete] = useState(false);
   const [results, setResults] = useState<AnalysisResult | null>(null);
 
   // Validation errors
@@ -80,6 +81,8 @@ useEffect(() => {
       return;
     }
 
+    setAnalysisComplete(false);
+
     setLoading(true);
 
     try {
@@ -99,20 +102,30 @@ useEffect(() => {
       }
 
       if (result.data) {
-        setResults(result.data);
-      } else {
+  setAnalysisComplete(true);
+
+  setTimeout(() => {
+    setResults(result.data);
+    setLoading(false);
+  }, 2000);
+} else {
         throw new Error("No data returned from analytical model.");
       }
     } catch (err: any) {
-      console.error(err);
-      const errMsg: string = err.message || "An unexpected error occurred. Please verify your file and try again.";
-      const quotaRelated = errMsg.includes("quota") || errMsg.includes("Too Many Requests");
-      setIsQuotaError(quotaRelated);
-      setGlobalError(errMsg);
-    } finally {
-      setLoading(false);
-    }
-  };
+  console.error(err);
+
+  const errMsg: string =
+    err.message ||
+    "An unexpected error occurred. Please verify your file and try again.";
+
+  const quotaRelated =
+    errMsg.includes("quota") ||
+    errMsg.includes("Too Many Requests");
+
+  setIsQuotaError(quotaRelated);
+  setGlobalError(errMsg);
+}
+};
 
   const handleReset = () => {
     setFile(null);
@@ -132,7 +145,7 @@ useEffect(() => {
 </div>
       {/* Header bar */}
       <header className="border-b border-zinc-900 bg-zinc-950/50 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6  lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 via-indigo-600 to-blue-600 flex items-center justify-center shadow-lg shadow-violet-600/30">
   <Brain className="w-5 h-5 text-white" />
@@ -162,7 +175,11 @@ useEffect(() => {
     duration: 0.12,
   }}
 />
-        {loading && <LoadingOverlay />}
+        {loading && (
+  <LoadingOverlay
+    analysisComplete={analysisComplete}
+  />
+)}
 
         {!results ? (
           <div className="space-y-24">
