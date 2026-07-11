@@ -88,7 +88,7 @@ Instead of practicing generic interview questions, users receive role-specific a
 
 ### Landing Page
 
-<img width="100%" alt="Landing Page" src="./Screenshot/Landing.png" />
+<img width="100%" alt="Landing Page" src="./Screenshot/Landing(2).png" />
 
 ### Interview Setup
 
