@@ -104,10 +104,12 @@ useEffect(() => {
       if (result.data) {
   setAnalysisComplete(true);
 
-  setTimeout(() => {
-    setResults(result.data);
-    setLoading(false);
-  }, 2000);
+  const analysisData = result.data;
+
+setTimeout(() => {
+  setResults(analysisData);
+  setLoading(false);
+}, 2000);
 } else {
         throw new Error("No data returned from analytical model.");
       }
