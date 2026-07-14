@@ -1,264 +1,301 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRef } from "react";
+import {
+  motion,
+  useTransform,
+  useSpring,
+  useMotionValue,
+  type MotionValue,
+} from "framer-motion";
+import {
+  ArrowLeftRight,
+  FileText,
+  ArrowRight,
+  Clock,
+  ShieldCheck,
+  Lock,
+} from "lucide-react";
 
-const cards = [
-  {
-    title: "SYSTEM DESIGN",
-    text: "How would you scale this to 10M users?",
-    className: "top-16 left-10 -rotate-6",
-  },
-  {
-    title: "BEHAVIORAL",
-    text: "Tell me about a conflict with a teammate.",
-    className: "top-24 right-10 rotate-6",
-  },
-  {
-    title: "TECHNICAL",
-    text: "Walk me through the trade-offs in this design.",
-    className: "bottom-32 left-20 rotate-3",
-  },
-  {
-    title: "FOLLOW-UP",
-    text: "Why did you leave this role after 8 months?",
-    className: "bottom-24 right-20 -rotate-3",
-  },
-];
+/* ------------------------------------------------------------------ */
+/*  Shared tokens — identical to the rest of PrepWise                   */
+/* ------------------------------------------------------------------ */
 
-export default function HeroSection() {
-  const router = useRouter();
+const EASE = [0.16, 1, 0.3, 1] as const;
+const GLOW =
+  "0 0 0 1px rgba(255,255,255,0.06), 0 8px 32px -12px rgba(139,92,246,0.25)";
+const MONO = "'JetBrains Mono', monospace";
 
-  const [leaving, setLeaving] = useState(false);
+/* ------------------------------------------------------------------ */
+/*  Word-by-word reveal — same technique as the current hero            */
+/* ------------------------------------------------------------------ */
 
+function RevealLine({ text, delayStart = 0 }: { text: string; delayStart?: number }) {
+  const words = text.split(" ");
+  return (
+    <span className="block">
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden align-bottom">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "115%" }}
+            animate={{ y: "0%" }}
+            transition={{ duration: 0.8, delay: delayStart + i * 0.04, ease: EASE }}
+          >
+            {word}&nbsp;
+          </motion.span>
+        </span>
+      ))}
+    </span>
+  );
+}
 
-  const handleNavigate = () => {
-    setLeaving(true);
+/* ------------------------------------------------------------------ */
+/*  Magnetic CTA wrapper                                                */
+/* ------------------------------------------------------------------ */
 
-    setTimeout(() => {
-      router.push("/workspace");
-    }, 350);
-  };
+function Magnetic({ children, strength = 0.3 }: { children: React.ReactNode; strength?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 200, damping: 18, mass: 0.2 });
+  const springY = useSpring(y, { stiffness: 200, damping: 18, mass: 0.2 });
+
+  function handleMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    x.set((e.clientX - rect.left - rect.width / 2) * strength);
+    y.set((e.clientY - rect.top - rect.height / 2) * strength);
+  }
+  function handleLeave() {
+    x.set(0);
+    y.set(0);
+  }
 
   return (
-    <section className="relative overflow-hidden pt-24 pb-8 min-h-[75vh]">
-      {/* Mouse Spotlight */}
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      style={{ x: springX, y: springY }}
+      className="inline-block"
+    >
+      {children}
+    </motion.div>
+  );
+}
 
-      {/* Ambient Glow */}
+/* ------------------------------------------------------------------ */
+/*  Trust section — sits under the CTA, its own visual block            */
+/*  Policy claims only (time / storage / sharing) — no invented usage   */
+/*  numbers. Edit the copy to match what's actually true of your        */
+/*  backend before shipping this.                                       */
+/* ------------------------------------------------------------------ */
 
+const TRUST_ITEMS = [
+  { icon: Clock, text: "Ready in about a minute" },
+  { icon: ShieldCheck, text: "Your resume isn't stored after your session" },
+  { icon: Lock, text: "Never shared with anyone else" },
+];
 
+function TrustRow() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 1.25, ease: EASE }}
+      className="mt-7 flex flex-col gap-2.5 border-t border-white/[0.06] pt-6 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5"
+    >
+      {TRUST_ITEMS.map(({ icon: Icon, text }) => (
+        <span key={text} className="flex items-center gap-2 text-[12.5px] text-[#8A8D94]">
+          <Icon size={13} className="shrink-0 text-[#5C5C63]" />
+          {text}
+        </span>
+      ))}
+    </motion.div>
+  );
+}
 
-      {/* Floating Cards */}
+/* ------------------------------------------------------------------ */
+/*  Proof card — a real generated report, not a fake metric             */
+/*                                                                      */
+/*  No invented scores or counts. It shows the actual shape of what     */
+/*  PrepWise produces — focus areas and real sample questions, in the   */
+/*  same categories and format the rest of the product uses — labeled  */
+/*  honestly as an example rather than implying a computed result.      */
+/* ------------------------------------------------------------------ */
 
-      <div className="hidden xl:block">
-        {cards.map((card, index) => (
-          <motion.div
-            key={index}
-            className={`absolute ${card.className} z-10`}
-            initial={{
-              opacity: 0,
-              scale: 0.8,
-              filter: "blur(10px)",
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              filter: "blur(0px)",
-              y: [0, -12, 0],
-            }}
-            transition={{
-              opacity: {
-                duration: 0.8,
-                delay: index * 0.15,
-              },
-              scale: {
-                duration: 0.8,
-                delay: index * 0.15,
-              },
-              y: {
-                duration: 6 + index,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-            }}
-          >
-            <motion.div
-              whileHover={{
-                scale: 1.05,
-                y: -8,
-              }}
-              className="
-                w-64
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/[0.03]
-                backdrop-blur-xl
-                p-4
-              "
-            >
-              <p className="text-xs tracking-widest text-indigo-400 font-medium">
-                {card.title}
-              </p>
+const FOCUS_AREAS = ["React internals", "System design fundamentals", "Behavioral"];
 
-              <p className="mt-2 text-sm text-zinc-300">
-                {card.text}
-              </p>
-            </motion.div>
-          </motion.div>
-        ))}
-      </div>
+const SAMPLE_QUESTIONS = [
+  { tag: "SYSTEM DESIGN", text: "How would you scale this to 10M users?" },
+  { tag: "BEHAVIORAL", text: "Tell me about a conflict with a teammate." },
+];
+
+function ProofCard() {
+  const springX = 0;
+  const springY = 0;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5, ease: EASE }}
+      className="relative mx-auto w-full max-w-sm md:mx-0"
+    >
+      {/* decorative stack behind — depth only, no content of its own */}
+      <div className="absolute inset-0 rotate-[-5deg] rounded-2xl border border-white/[0.06] bg-white/[0.02]" />
+      <div className="absolute inset-0 rotate-[3deg] rounded-2xl border border-white/[0.06] bg-white/[0.02]" />
 
       <motion.div
-        className="relative z-20 max-w-7xl mx-auto px-6"
-        animate={{
-          opacity: leaving ? 0 : 1,
-          y: leaving ? -30 : 0,
-          scale: leaving ? 0.98 : 1,
-        }}
-        transition={{
-          duration: 0.3,
-          ease: "easeInOut",
-        }}
+        style={{ x: springX, y: springY }}
+        animate={{ y: [0, -5, 0] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-2xl"
       >
-        {/* Badge */}
+        <div style={{ boxShadow: GLOW }} className="absolute inset-0 rounded-2xl" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex justify-center"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-800 bg-zinc-900/60 text-zinc-300 text-sm">
-            <Sparkles className="w-4 h-4 text-indigo-400" />
-            Interview Intelligence Platform
+        {/* header — this is the report, not the inputs */}
+        <div className="relative flex items-center gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.05]">
+            <FileText size={16} className="text-[#A78BFA]" />
           </div>
-        </motion.div>
-
-        {/* Heading */}
-
-        <div className="text-center mt-10">
-          <motion.h1
-            initial={{
-              opacity: 0,
-              y: 40,
-              filter: "blur(12px)",
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              filter: "blur(0px)",
-            }}
-            transition={{
-              duration: 1,
-            }}
-            className="
-              text-5xl
-              md:text-7xl
-              font-black
-              tracking-tight
-              leading-[0.95]
-            "
-          >
-            <motion.span
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              Know Every Question
-            </motion.span>
-
-            <br />
-
-            <motion.span
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: 0.2,
-              }}
-              className="
-                bg-gradient-to-r
-                from-white
-                via-zinc-300
-                to-indigo-400
-                bg-clip-text
-                text-transparent
-              "
-            >
-              Before The Interview Starts
-            </motion.span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              delay: 0.3,
-            }}
-            className="
-              max-w-2xl
-              mx-auto
-              mt-8
-              text-lg
-              text-zinc-500
-              leading-relaxed
-            "
-          >
-            Upload your resume and a job description. PrepWise analyzes
-            your experience, identifies likely interview focus areas,
-            and generates realistic questions tailored to the exact role
-            you're applying for.
-          </motion.p>
+          <div>
+            <p className="text-[14.5px] font-semibold text-[#F5F5F7]">Interview Brief</p>
+            <p className="text-[12px] text-[#5C5C63]">Example — Senior Frontend Engineer</p>
+          </div>
         </div>
 
-        {/* CTA */}
+        <div className="relative my-5 h-px w-full bg-white/[0.06]" />
+
+        {/* focus areas — categorical, not a score */}
+        <div className="relative">
+          <span
+            className="text-[10px] font-medium tracking-wider text-[#9A9AA2]"
+            style={{ fontFamily: MONO }}
+          >
+            FOCUS AREAS
+          </span>
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            {FOCUS_AREAS.map((area) => (
+              <span
+                key={area}
+                className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-[11.5px] text-[#D3D4D8]"
+              >
+                {area}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative my-5 h-px w-full bg-white/[0.06]" />
+
+        {/* sample questions — the real deliverable, same format the product actually uses */}
+        <div className="relative">
+          <span
+            className="text-[10px] font-medium tracking-wider text-[#9A9AA2]"
+            style={{ fontFamily: MONO }}
+          >
+            SAMPLE QUESTIONS
+          </span>
+          <div className="mt-2.5 space-y-2.5">
+            {SAMPLE_QUESTIONS.map((q) => (
+              <div
+                key={q.text}
+                className="rounded-lg border border-white/[0.08] bg-white/[0.03] px-3.5 py-3"
+              >
+                <span
+                  className="text-[10px] font-medium tracking-wider text-[#C4B5FD]"
+                  style={{ fontFamily: MONO }}
+                >
+                  {q.tag}
+                </span>
+                <p className="mt-1 text-[13px] leading-snug text-[#E4E4E7]">{q.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <p className="relative mt-5 text-[11.5px] leading-relaxed text-[#5C5C63]">
+          Your full brief includes more questions across every category —
+          built from your resume and the role you provide.
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Hero — drop-in replacement.                                         */
+/*  Same props as the existing Hero() inside PrepWiseLanding, so it     */
+/*  swaps in directly. Assumes the parent page already renders          */
+/*  AmbientGlow / MouseSpotlight / Vignette — this component is content */
+/*  only, so you don't end up with duplicate background layers.         */
+/* ------------------------------------------------------------------ */
+
+interface HeroProps {
+  onAnalyze: () => void;
+}
+
+export default function Hero({ onAnalyze }: HeroProps) {
+  return (
+    <section className="relative mx-auto grid max-w-6xl gap-14 px-6 pb-28 pt-20 md:grid-cols-2 md:items-center md:gap-10 md:pt-28">
+      {/* left — the pitch */}
+      <div className="text-left">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE }}
+          className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-1.5 backdrop-blur-xl"
+        >
+          <ArrowLeftRight size={12} className="text-[#A78BFA]" />
+          <span
+            className="text-[11px] font-medium tracking-[0.14em] text-[#9A9AA2]"
+            style={{ fontFamily: MONO }}
+          >
+            RESUME-MATCHED INTERVIEW PREP
+          </span>
+        </motion.div>
+
+        <h1 className="max-w-xl text-[38px] font-extrabold leading-[1.12] tracking-[-0.03em] text-[#F5F5F7] sm:text-[46px] md:text-[52px]">
+          <RevealLine text="Practice the questions" delayStart={0.15} />
+          <RevealLine text="your next interviewer" delayStart={0.4} />
+          <RevealLine text="will actually ask." delayStart={0.65} />
+        </h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.95, ease: EASE }}
+          className="mt-6 max-w-md text-[15.5px] leading-relaxed text-[#9A9AA2]"
+        >
+          Upload your resume and the job description. PrepWise compares them
+          and gives you the exact questions to expect and the gaps worth
+          closing — in under a minute.
+        </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{
-            delay: 0.4,
-          }}
-          className="flex justify-center mt-10"
+          transition={{ duration: 0.7, delay: 1.1, ease: EASE }}
+          className="mt-8"
         >
-          <motion.button
-            whileHover={{
-              scale: 1.05,
-              y: -5,
-              boxShadow:
-                "0px 0px 80px rgba(99,102,241,0.35)",
-            }}
-            whileTap={{
-              scale: 0.97,
-            }}
-            onClick={handleNavigate}
-            className="
-              group
-              px-10
-              py-5
-              rounded-2xl
-              border
-              border-white/10
-              bg-white/5
-              backdrop-blur-xl
-              text-white
-              font-semibold
-              hover:bg-white/10
-              hover:border-white/20
-              transition-all
-              duration-300
-              shadow-[0_0_60px_rgba(99,102,241,0.25)]
-              flex
-              items-center
-              gap-3
-            "
-          >
-            Analyze My Resume
-
-            <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-          </motion.button>
+          <Magnetic strength={0.25}>
+            <button
+              onClick={onAnalyze}
+              className="group flex items-center gap-2 rounded-xl bg-[#F5F5F7] px-6 py-3.5 text-[14px] font-semibold text-[#0A0A0A] transition-shadow duration-300 hover:shadow-[0_0_0_1px_rgba(139,92,246,0.4),0_16px_40px_-10px_rgba(139,92,246,0.55)]"
+            >
+              Upload Resume &amp; Job Description
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+            </button>
+          </Magnetic>
         </motion.div>
-      </motion.div>
+
+        <TrustRow />
+      </div>
+
+      {/* right — the proof: a real generated report, honestly labeled */}
+      <ProofCard />
     </section>
   );
 }
