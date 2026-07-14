@@ -8,6 +8,7 @@ import {
   FileBarChart,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 const steps = [
   {
@@ -38,6 +39,7 @@ const steps = [
 
 export default function HowItWorks() {
   const router = useRouter();
+  const [, startTransition] = useTransition();
 
   return (
     <section className="relative py-24 overflow-hidden">
@@ -109,25 +111,29 @@ export default function HowItWorks() {
                     delay: index * 0.12,
                   }}
                   whileHover={{
-  y: -12,
-  scale: 1.04,
+  y: -20,
+  scale: 1.10,
 }}
 animate={
   isFirstCard
     ? {
         boxShadow: [
-          "0 0 0px rgba(99,102,241,0)",
-          "0 0 60px rgba(99,102,241,0.35)",
-          "0 0 0px rgba(99,102,241,0)",
+          "0 0 25px rgba(99,102,241,0.15)",
+          "0 0 80px rgba(99,102,241,0.45)",
+          "0 0 25px rgba(99,102,241,0.15)",
         ],
       }
     : {}
 }
                   onClick={
-                    isFirstCard
-                      ? () => router.push("/workspace")
-                      : undefined
-                  }
+  isFirstCard
+    ? () => {
+        startTransition(() => {
+          router.push("/workspace");
+        });
+      }
+    : undefined
+}
                   className={`
                     group
                     relative
@@ -207,20 +213,17 @@ rotate: [0, 4, -4, 0],
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                    className="
-  mt-6
-  inline-flex
-  items-center
-  gap-2
-  px-4
-  py-2
-  rounded-full
+className="
+  w-14
+  h-14
+  rounded-2xl
+  bg-indigo-500/10
   border
-  border-indigo-500/20
-  bg-indigo-500/15
-  text-indigo-300
-  text-sm
-  font-semibold
+  border-indigo-500/10
+  flex
+  items-center
+  justify-center
+  mb-5
 "
                   >
                     <Icon className="w-7 h-7 text-indigo-400" />
@@ -233,6 +236,12 @@ rotate: [0, 4, -4, 0],
                   <h3 className="text-white font-bold text-lg">
                     {step.title}
                   </h3>
+
+                  {isFirstCard && (
+  <p className="text-indigo-400 text-xs mt-1 font-medium">
+    Recommended Starting Point
+  </p>
+)}
 
                   <p className="mt-3 text-zinc-500 text-sm leading-relaxed">
                     {step.description}
@@ -248,18 +257,20 @@ rotate: [0, 4, -4, 0],
       repeat: Infinity,
     }}
     className="
-      mt-6
-      inline-flex
-      items-center
-      gap-2
-      px-4
-      py-2
-      rounded-full
-      bg-indigo-500/10
-      text-indigo-400
-      text-sm
-      font-medium
-    "
+  mt-6
+  inline-flex
+  items-center
+  gap-2
+  px-4
+  py-2
+  rounded-full
+  border
+  border-indigo-500/20
+  bg-indigo-500/15
+  text-indigo-300
+  text-sm
+  font-semibold
+"
   >
     Launch Workspace →
   </motion.div>
