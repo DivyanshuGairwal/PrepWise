@@ -7,41 +7,40 @@ import {
   Brain,
   FileBarChart,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const steps = [
   {
     icon: FileText,
     title: "Upload Resume",
     description:
-      "Upload your PDF resume and let PrepWise extract skills, projects, and experience.",
+      "Upload your PDF resume to extract skills, projects, education, and experience.",
   },
   {
     icon: Briefcase,
     title: "Paste Job Description",
     description:
-      "Provide the target role so PrepWise understands expectations and requirements.",
+      "Paste the job description so PrepWise can understand the target role and expectations.",
   },
   {
     icon: Brain,
     title: "AI Analysis",
     description:
-      "Resume data and job requirements are matched to identify likely interview focus areas.",
+      "PrepWise compares your resume against the role requirements and identifies interview focus areas.",
   },
   {
     icon: FileBarChart,
     title: "Interview Report",
     description:
-      "Receive technical, behavioral, HR, and resume-based interview questions instantly.",
+      "Get role match insights, interview questions, and preparation recommendations instantly.",
   },
 ];
 
 export default function HowItWorks() {
+  const router = useRouter();
+
   return (
     <section className="relative py-24 overflow-hidden">
-
-      {/* Background Glow */}
-    
-
       <div className="relative max-w-7xl mx-auto px-6">
 
         {/* Header */}
@@ -53,16 +52,16 @@ export default function HowItWorks() {
           className="text-center mb-20"
         >
           <p className="text-indigo-400 text-sm font-medium uppercase tracking-[0.3em]">
-            Workflow
+            Simple Process
           </p>
 
           <h2 className="mt-4 text-4xl md:text-5xl font-black text-white">
-            How PrepWise Works
+            Get Interview Ready In Minutes
           </h2>
 
           <p className="mt-4 text-zinc-500 max-w-2xl mx-auto">
-            Upload your resume, paste the target role, and receive a personalized
-            interview preparation report in seconds.
+            Upload your resume and job description to receive interview questions,
+            role match insights, and a personalized preparation report.
           </p>
 
           <motion.div
@@ -75,15 +74,13 @@ export default function HowItWorks() {
             }}
             className="mt-6 text-sm text-zinc-600"
           >
-            Resume → AI Analysis → Interview Report
+            Resume → Job Description → AI Analysis → Interview Report
           </motion.div>
         </motion.div>
 
-        {/* Cards Wrapper */}
+        {/* Cards */}
 
         <div className="relative">
-
-          {/* Desktop Connector Line */}
 
           <div className="hidden lg:block absolute top-1/2 left-[12%] right-[12%] h-px">
             <div className="w-full h-full bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent" />
@@ -93,6 +90,8 @@ export default function HowItWorks() {
 
             {steps.map((step, index) => {
               const Icon = step.icon;
+
+              const isFirstCard = index === 0;
 
               return (
                 <motion.div
@@ -110,10 +109,26 @@ export default function HowItWorks() {
                     delay: index * 0.12,
                   }}
                   whileHover={{
-                    y: -8,
-                    scale: 1.03,
-                  }}
-                  className="
+  y: -12,
+  scale: 1.04,
+}}
+animate={
+  isFirstCard
+    ? {
+        boxShadow: [
+          "0 0 0px rgba(99,102,241,0)",
+          "0 0 60px rgba(99,102,241,0.35)",
+          "0 0 0px rgba(99,102,241,0)",
+        ],
+      }
+    : {}
+}
+                  onClick={
+                    isFirstCard
+                      ? () => router.push("/workspace")
+                      : undefined
+                  }
+                  className={`
                     group
                     relative
                     overflow-hidden
@@ -126,9 +141,38 @@ export default function HowItWorks() {
                     transition-all
                     duration-300
                     hover:border-indigo-500/40
-                  "
+                   ${
+  isFirstCard
+    ? "cursor-pointer border-indigo-500/30 bg-indigo-500/[0.04] hover:border-indigo-400 hover:shadow-[0_0_40px_rgba(99,102,241,0.25)]"
+    : ""
+}
+                  `}
                 >
                   {/* Hover Glow */}
+
+                  {isFirstCard && (
+  <motion.div
+    animate={{
+      scale: [1, 1.3, 1],
+      opacity: [0.15, 0.3, 0.15],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+    }}
+    className="
+      absolute
+      -top-20
+      -left-20
+      w-56
+      h-56
+      rounded-full
+      bg-indigo-500
+      blur-[100px]
+      pointer-events-none
+    "
+  />
+)}
 
                   <div
                     className="
@@ -145,17 +189,18 @@ export default function HowItWorks() {
                     "
                   />
 
-                  {/* Giant Number */}
+                  {/* Number */}
 
                   <div className="absolute top-3 right-4 text-6xl font-black text-white/[0.03]">
                     {String(index + 1).padStart(2, "0")}
                   </div>
 
-                  {/* Animated Icon */}
+                  {/* Icon */}
 
                   <motion.div
                     animate={{
-                      y: [0, -4, 0],
+                      y: [0, -5, 0],
+rotate: [0, 4, -4, 0],
                     }}
                     transition={{
                       duration: 2,
@@ -163,17 +208,20 @@ export default function HowItWorks() {
                       ease: "easeInOut",
                     }}
                     className="
-                      w-14
-                      h-14
-                      rounded-2xl
-                      bg-indigo-500/10
-                      border
-                      border-indigo-500/10
-                      flex
-                      items-center
-                      justify-center
-                      mb-5
-                    "
+  mt-6
+  inline-flex
+  items-center
+  gap-2
+  px-4
+  py-2
+  rounded-full
+  border
+  border-indigo-500/20
+  bg-indigo-500/15
+  text-indigo-300
+  text-sm
+  font-semibold
+"
                   >
                     <Icon className="w-7 h-7 text-indigo-400" />
                   </motion.div>
@@ -189,11 +237,39 @@ export default function HowItWorks() {
                   <p className="mt-3 text-zinc-500 text-sm leading-relaxed">
                     {step.description}
                   </p>
+
+                  {isFirstCard && (
+  <motion.div
+    animate={{
+      x: [0, 6, 0],
+    }}
+    transition={{
+      duration: 1.5,
+      repeat: Infinity,
+    }}
+    className="
+      mt-6
+      inline-flex
+      items-center
+      gap-2
+      px-4
+      py-2
+      rounded-full
+      bg-indigo-500/10
+      text-indigo-400
+      text-sm
+      font-medium
+    "
+  >
+    Launch Workspace →
+  </motion.div>
+)}
                 </motion.div>
               );
             })}
           </div>
         </div>
+
       </div>
     </section>
   );
