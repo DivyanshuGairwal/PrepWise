@@ -233,11 +233,7 @@ function ProofCard() {
 /*  only, so you don't end up with duplicate background layers.         */
 /* ------------------------------------------------------------------ */
 
-interface HeroProps {
-  onAnalyze: () => void;
-}
-
-export default function Hero({ onAnalyze }: HeroProps) {
+export default function Hero() {
   return (
     <section className="relative mx-auto grid max-w-6xl gap-14 px-6 pb-28 pt-20 md:grid-cols-2 md:items-center md:gap-10 md:pt-28">
       {/* left — the pitch */}
@@ -282,7 +278,7 @@ export default function Hero({ onAnalyze }: HeroProps) {
         >
           <Magnetic strength={0.25}>
             <button
-              onClick={onAnalyze}
+            onClick={() => window.location.href = "/workspace"}
               className="group flex items-center gap-2 rounded-xl bg-[#F5F5F7] px-6 py-3.5 text-[14px] font-semibold text-[#0A0A0A] transition-shadow duration-300 hover:shadow-[0_0_0_1px_rgba(139,92,246,0.4),0_16px_40px_-10px_rgba(139,92,246,0.55)]"
             >
               Upload Resume &amp; Job Description
