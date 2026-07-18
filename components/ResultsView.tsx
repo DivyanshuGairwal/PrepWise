@@ -231,17 +231,49 @@ export default function ResultsView({
         AI Summary
       </h3>
 
-      <p className="text-zinc-400 leading-relaxed">
-        Based on your resume and target role, expect strong focus on{" "}
-        <span className="text-white font-medium">
-          {detectedSkills.slice(0, 5).join(", ")}
-        </span>.
-        These areas are likely to appear in technical discussions,
-        project deep-dives, and follow-up interview questions.
-      </p>
+      {data.summary}
     </div>
   </div>
 </motion.div>
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
+</div>
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+  <div className="glass-panel rounded-3xl p-6">
+    <Target className="w-6 h-6 text-indigo-400 mb-4" />
+    <div className="text-4xl font-black text-white">
+      <AnimatedCounter value={data.roleMatch} />%
+    </div>
+    <p className="text-zinc-400 mt-2">
+      Role Match Score
+    </p>
+  </div>
+
+  <div className="glass-panel rounded-3xl p-6">
+    <Brain className="w-6 h-6 text-purple-400 mb-4" />
+    <div className="text-4xl font-black text-white">
+      <AnimatedCounter value={detectedSkills.length} />
+    </div>
+    <p className="text-zinc-400 mt-2">
+      Core Skills
+    </p>
+  </div>
+
+  <div className="glass-panel rounded-3xl p-6">
+    <Layers className="w-6 h-6 text-cyan-400 mb-4" />
+    <div className="text-4xl font-black text-white">
+      <AnimatedCounter value={allQuestions.length} />
+    </div>
+    <p className="text-zinc-400 mt-2">
+      Question Bank
+    </p>
+  </div>
+
+</div>
 
 
         {/* MAIN */}
@@ -296,6 +328,12 @@ export default function ResultsView({
           )}
 
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+  
+
+</div>
 
         {/* QUESTIONS */}
 
