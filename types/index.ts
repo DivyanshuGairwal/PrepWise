@@ -11,7 +11,6 @@ export interface Question {
 export interface AnalysisResult {
   summary: string;
   roleMatch: number;
-
   technical: Question[];
   resume: Question[];
   behavioral: Question[];

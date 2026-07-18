@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { parsePdf } from "@/lib/pdf";
 import { generateInterviewQuestions } from "@/lib/gemini";
 import { AnalysisResponse } from "@/types";
+import { calculateRoleMatch } from "@/lib/roleMatch";
 
 export async function POST(request: NextRequest): Promise<NextResponse<AnalysisResponse>> {
   try {
@@ -70,12 +71,20 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalysisR
     }
 
     // 4. Generate interview questions using OpenRouter
-    const analysisResult = await generateInterviewQuestions(resumeText, jobDescription);
+    const analysisResult = await generateInterviewQuestions(
+  resumeText,
+  jobDescription
+);
 
-    return NextResponse.json({
-      success: true,
-      data: analysisResult
-    });
+analysisResult.roleMatch = calculateRoleMatch(
+  resumeText,
+  jobDescription
+);
+
+return NextResponse.json({
+  success: true,
+  data: analysisResult
+});
 
   } catch (error: any) {
     console.error("Analysis API error:", error);

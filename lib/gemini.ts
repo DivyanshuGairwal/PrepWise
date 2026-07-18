@@ -39,7 +39,6 @@ Return ONLY valid JSON.
 
 {
   "summary": "",
-  "roleMatch": 0,
   "technical": [],
   "resume": [],
   "behavioral": [],
@@ -190,7 +189,7 @@ function parseAndValidate(raw: string): AnalysisResult {
   return {
     summary:
       parsed.summary ||
-      "Interview focus areas generated successfully.",
+      "Interview analysis completed.",
 
     roleMatch:
       Number(parsed.roleMatch) || 75,
@@ -216,6 +215,8 @@ function parseAndValidate(raw: string): AnalysisResult {
     ),
   };
 }
+
+
 
 export async function generateInterviewQuestions(
   resumeText: string,
