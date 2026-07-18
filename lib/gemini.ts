@@ -38,6 +38,8 @@ Analyze the candidate's resume and the target job description.
 Return ONLY valid JSON.
 
 {
+  "summary": "",
+  "roleMatch": 0,
   "technical": [],
   "resume": [],
   "behavioral": [],
@@ -56,10 +58,26 @@ Each question object must contain:
 
 Requirements:
 
+- summary: 2-3 sentence interview intelligence summary
+- roleMatch: number from 0-100
+
 - technical: 3 questions
 - resume: 3 questions
 - behavioral: 3 questions
 - hr: 3 questions
+
+Role Match Rules:
+
+100 = perfect match
+80-90 = strong match
+60-79 = decent match
+below 60 = weak match
+
+Summary should explain:
+
+- strongest matching skills
+- likely interview focus areas
+- what interviewer will probably explore
 
 Personalize every question using the resume and job description.
 
@@ -170,19 +188,32 @@ function parseAndValidate(raw: string): AnalysisResult {
   };
 
   return {
+    summary:
+      parsed.summary ||
+      "Interview focus areas generated successfully.",
+
+    roleMatch:
+      Number(parsed.roleMatch) || 75,
+
     technical: normalizeQuestions(
       parsed.technical || [],
       "tech"
     ),
+
     resume: normalizeQuestions(
       parsed.resume || [],
       "resume"
     ),
+
     behavioral: normalizeQuestions(
       parsed.behavioral || [],
       "behavioral"
     ),
-    hr: normalizeQuestions(parsed.hr || [], "hr"),
+
+    hr: normalizeQuestions(
+      parsed.hr || [],
+      "hr"
+    ),
   };
 }
 
@@ -213,64 +244,64 @@ export async function generateInterviewQuestions(
 
   let lastError: any = null;
 
-  for (const model of MODEL_CASCADE) {
-    try {
-      console.log(
-        `[PrepWise] Trying model: ${model}`
-      );
+for (const model of MODEL_CASCADE) {
+  try {
+    console.log(
+      `[PrepWise] Trying model: ${model}`
+    );
 
-      const rawResponse = await callOpenRouter(
-        model,
-        messages
-      );
+    const rawResponse = await callOpenRouter(
+      model,
+      messages
+    );
 
-      const result = parseAndValidate(rawResponse);
+    const result = parseAndValidate(rawResponse);
 
-      console.log(
-        `[PrepWise] Success with model: ${model}`
-      );
+    console.log(
+      `[PrepWise] Success with model: ${model}`
+    );
 
-      return result;
-    } catch (error: any) {
-      lastError = error;
+    return result;
+  } catch (error: any) {
+    lastError = error;
 
-      console.error(
-        `[PrepWise] Model ${model} failed:`,
-        error?.status,
-        error?.message
-      );
+    console.error(
+      `[PrepWise] Model ${model} failed:`,
+      error?.status,
+      error?.message
+    );
 
-      if (isRateLimitError(error)) {
-        continue;
-      }
-
-      if (error instanceof SyntaxError) {
-        console.log(
-          `[PrepWise] Invalid JSON from ${model}, trying next model...`
-        );
-        continue;
-      }
-
-      if (
-        error?.status === 401 ||
-        error?.message?.includes("401")
-      ) {
-        throw new Error(
-          "Invalid OpenRouter API key."
-        );
-      }
-
+    if (isRateLimitError(error)) {
       continue;
     }
+
+    if (error instanceof SyntaxError) {
+      console.log(
+        `[PrepWise] Invalid JSON from ${model}, trying next model...`
+      );
+      continue;
+    }
+
+    if (
+      error?.status === 401 ||
+      error?.message?.includes("401")
+    ) {
+      throw new Error(
+        "Invalid OpenRouter API key."
+      );
+    }
+
+    continue;
   }
+}
 
-  console.error(
-    "[PrepWise] All models failed:",
-    lastError?.message
-  );
+console.error(
+  "[PrepWise] All models failed:",
+  lastError?.message
+);
 
-  throw new Error(
-    lastError?.message ||
-      "Failed to generate interview questions."
-  );
+throw new Error(
+  lastError?.message ||
+    "Failed to generate interview questions."
+);
 }

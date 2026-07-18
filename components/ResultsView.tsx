@@ -204,90 +204,47 @@ export default function ResultsView({
         </div>
       </div>
 
-      {/* STATS */}
 
-      {/* INTERVIEW OVERVIEW */}
+      {/* AI SUMMARY */}
 
 <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
-  className="grid md:grid-cols-3 gap-4"
+  className="
+    glass-panel
+    rounded-3xl
+    p-6
+    border
+    border-indigo-500/20
+    bg-gradient-to-br
+    from-indigo-500/5
+    to-transparent
+  "
 >
-  <div className="glass-panel rounded-3xl p-6 border border-zinc-800 hover:border-indigo-500/30 transition-all">
-    <Brain className="w-6 h-6 text-indigo-400 mb-4" />
-
-    <div className="text-4xl font-black text-white">
-      <>
-  <AnimatedCounter value={88} />%
-</>
+  <div className="flex items-start gap-4">
+    <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center">
+      <Brain className="w-6 h-6 text-indigo-400" />
     </div>
 
-    <div className="text-zinc-400 text-sm mt-1">
-      Interview Readiness
-    </div>
+    <div>
+      <h3 className="text-xl font-bold text-white mb-2">
+        AI Summary
+      </h3>
 
-    <div className="text-xs text-zinc-600 mt-3">
-      Based on skills, projects and role alignment
-    </div>
-  </div>
-
-  <div className="glass-panel rounded-3xl p-6 border border-zinc-800 hover:border-purple-500/30 transition-all">
-    <Target className="w-6 h-6 text-purple-400 mb-4" />
-
-    <div className="text-4xl font-black text-white">
-      <AnimatedCounter value={detectedSkills.length} />
-    </div>
-
-    <div className="text-zinc-400 text-sm mt-1">
-      Core Skills
-    </div>
-
-    <div className="text-xs text-zinc-600 mt-3">
-      Technologies and concepts detected
-    </div>
-  </div>
-
-  <div className="glass-panel rounded-3xl p-6 border border-zinc-800 hover:border-cyan-500/30 transition-all">
-    <Layers className="w-6 h-6 text-cyan-400 mb-4" />
-
-    <div className="text-4xl font-black text-white">
-      <AnimatedCounter value={allQuestions.length} />
-    </div>
-
-    <div className="text-zinc-400 text-sm mt-1">
-      Question Bank
-    </div>
-
-    <div className="text-xs text-zinc-600 mt-3">
-      Personalized interview questions generated
+      <p className="text-zinc-400 leading-relaxed">
+        Based on your resume and target role, expect strong focus on{" "}
+        <span className="text-white font-medium">
+          {detectedSkills.slice(0, 5).join(", ")}
+        </span>.
+        These areas are likely to appear in technical discussions,
+        project deep-dives, and follow-up interview questions.
+      </p>
     </div>
   </div>
 </motion.div>
 
-      {/* SKILLS */}
 
-      <div className="glass-panel rounded-3xl p-6">
-       <h3 className="text-lg font-bold mb-4">
-  Interview Focus Areas
-</h3>
-
-<p className="text-sm text-zinc-500 mb-4">
-  Topics most likely to be discussed based on your resume and target role.
-</p>
-
-        <div className="flex flex-wrap gap-2">
-          {detectedSkills.map((skill, index) => (
-            <span
-              key={index}
-              className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-sm text-zinc-300"
-            >
-              {skill}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* MAIN */}
+        {/* MAIN */}
 
       <div className="flex flex-col lg:flex-row gap-6">
 
