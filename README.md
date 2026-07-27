@@ -38,8 +38,6 @@ Instead of practicing generic interview questions, users receive role-specific a
 * Interview readiness indicators
 * Structured interview preparation report
 
----
-
 ## How It Works
 
 1. Upload your resume (PDF)
