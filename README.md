@@ -47,8 +47,6 @@ Instead of practicing generic interview questions, users receive role-specific a
 5. Personalized interview questions are generated
 6. Receive a complete Interview Prep Report
 
----
-
 ## Tech Stack
 
 ### Frontend
