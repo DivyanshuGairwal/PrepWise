@@ -211,4 +211,4 @@ GitHub: https://github.com/DivyanshuGairwal
 ## License
 
 This project is licensed under the MIT License
-jz v zd
+jz v z
