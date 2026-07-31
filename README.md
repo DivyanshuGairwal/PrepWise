@@ -177,7 +177,7 @@ types/
 
 ---
 
-## Future Improvements
+## Future Improveme
 
 * Real role match scoring
 * AI-generated interview summary
