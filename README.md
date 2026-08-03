@@ -204,10 +204,8 @@ PrepWise was built to bridge that gap by combining resume analysis and job descr
 
 Computer Science Graduate
 
-GitHub: https://github.com/DivyanshuGairwal
-
----
+GitHub: https://github.com/DivyanshuGairwal 
 
 ## License
-
 This project is licensed under the MIT Licensed.
+
