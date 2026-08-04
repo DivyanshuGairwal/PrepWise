@@ -7,6 +7,7 @@ import {
   Check,
   Lightbulb,
   MessageSquareCode,
+  Sparkles,
 } from "lucide-react";
 import { Question } from "@/types";
 
