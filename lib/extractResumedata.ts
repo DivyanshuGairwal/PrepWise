@@ -14,7 +14,7 @@ export function extractResumedata(
     .map(line => line.trim())
     .filter(Boolean);
 
-  const sections: Record<string, string[]> = {
+  const sections: Resumedata = {
     skills: [],
     projects: [],
     experience: [],
