@@ -123,6 +123,10 @@ export default function QuestionCard({
               </p>
             </div>
           </div>
+          <div className="mt-6 flex items-start gap-4">
+            <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
+              <Sparkles className="w-4 h-4 text-purple-400" />
+            </div>
 
             <div>
 
@@ -130,6 +134,7 @@ export default function QuestionCard({
               </p>
             </div>
           </div>
+
 
           {/* Practice Sandbox */}
           <div className="mt-8 pt-6 border-t border-zinc-800">
