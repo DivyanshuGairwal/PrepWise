@@ -7,7 +7,6 @@ import {
   Check,
   Lightbulb,
   MessageSquareCode,
-  Sparkles,
 } from "lucide-react";
 import { Question } from "@/types";
 
@@ -124,10 +123,6 @@ export default function QuestionCard({
               </p>
             </div>
           </div>
-          <div className="mt-6 flex items-start gap-4">
-            <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
-              <Sparkles className="w-4 h-4 text-purple-400" />
-            </div>
 
             <div>
 
@@ -135,26 +130,6 @@ export default function QuestionCard({
               </p>
             </div>
           </div>
-
-          {/* Keywords */}
-          {question.keyPoints?.length > 0 && (
-            <div className="mt-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-cyan-300 mb-3">
-                Keywords To Mention
-              </h4>
-
-              <div className="flex flex-wrap gap-2">
-                {question.keyPoints.map((point, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-300 text-xs font-medium"
-                  >
-                    {point}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Practice Sandbox */}
           <div className="mt-8 pt-6 border-t border-zinc-800">
