@@ -59,6 +59,7 @@ useEffect(() => {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setResumeError(null);
     setJdError(null);
     setGlobalError(null);
@@ -338,6 +339,7 @@ setTimeout(() => {
                 <div className="flex justify-center pt-2">
                   <button
   type="submit"
+  disabled={loading}
  className="
 group
 relative
@@ -355,9 +357,18 @@ hover:border-zinc-500
 hover:-translate-y-0.5
 hover:shadow-[0_20px_50px_rgba(0,0,0,0.35)]
 active:scale-[0.98]
+
+disabled:opacity-60
+disabled:cursor-not-allowed
+disabled:hover:translate-y-0
+disabled:shadow-none  
 "
 >
-                    <span>Generate Intelligence Report</span>
+                    <span>
+  {loading
+    ? "Generating..."
+    : "Generate Intelligence Report"}
+</span>
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>

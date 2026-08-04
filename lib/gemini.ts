@@ -5,7 +5,6 @@ const OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1";
 
 const MODEL_CASCADE = [
   "openai/gpt-oss-20b:free",
-  "openai/gpt-oss-120b:free",
   "google/gemma-3-4b-it",
 ];
 
@@ -41,7 +40,6 @@ Return ONLY valid JSON.
   "summary": "",
   "technical": [],
   "resume": [],
-  "behavioral": [],
   "hr": []
 }
 
@@ -51,26 +49,18 @@ Each question object must contain:
   "id": "",
   "question": "",
   "whyAsked": "",
-  "suggestedApproach": "",
-  "keyPoints": []
 }
 
 Requirements:
 
 - summary: 2-3 sentence interview intelligence summary
-- roleMatch: number from 0-100
+
 
 - technical: 3 questions
 - resume: 3 questions
-- behavioral: 3 questions
-- hr: 3 questions
+- hr:2questions
 
 Role Match Rules:
-
-100 = perfect match
-80-90 = strong match
-60-79 = decent match
-below 60 = weak match
 
 Summary should explain:
 
@@ -80,14 +70,14 @@ Summary should explain:
 
 Personalize every question using the resume and job description.
 
-Resume:
+Structured Resume Data:
 """
-${resumeText.substring(0, 8000)}
+${resumeText}
 """
 
 Job Description:
 """
-${jobDescription.substring(0, 4000)}
+${jobDescription.substring(0, 2500)}
 """`;
 }
 
@@ -104,7 +94,7 @@ function isRateLimitError(error: any): boolean {
   );
 }
 
-async function callOpenRouter(
+export async function callOpenRouter(
   model: string,
   messages: OpenRouterMessage[]
 ): Promise<string> {
@@ -116,7 +106,9 @@ async function callOpenRouter(
 
   console.log(`[PrepWise] Using model: ${model}`);
 
-  const response = await fetch(
+  console.time(`🌐 ${model}`);
+
+const response = await fetch(
     `${OPENROUTER_BASE_URL}/chat/completions`,
     {
       method: "POST",
@@ -129,13 +121,14 @@ async function callOpenRouter(
       body: JSON.stringify({
         model,
         messages,
-        temperature: 0.7,
-        max_tokens: 4000,
+        temperature: 0.3,
+        max_tokens: 1600,
       }),
     }
   );
 
   const data: OpenRouterResponse = await response.json();
+  console.timeEnd(`🌐 ${model}`);
 
   if (!response.ok || data.error) {
     const errorMsg =
@@ -173,17 +166,10 @@ function parseAndValidate(raw: string): AnalysisResult {
     if (!Array.isArray(arr)) return [];
 
     return arr.map((q: any, i: number) => ({
-      id: q.id || `${prefix}_${i + 1}`,
-      question: q.question || "",
-      whyAsked: q.whyAsked || q.why_asked || "",
-      suggestedApproach:
-        q.suggestedApproach || q.suggested_approach || "",
-      keyPoints: Array.isArray(q.keyPoints)
-        ? q.keyPoints
-        : Array.isArray(q.key_points)
-        ? q.key_points
-        : [],
-    }));
+  id: q.id || `${prefix}_${i + 1}`,
+  question: q.question || "",
+  whyAsked: q.whyAsked || q.why_asked || "",
+}));
   };
 
   return {
@@ -202,11 +188,6 @@ function parseAndValidate(raw: string): AnalysisResult {
     resume: normalizeQuestions(
       parsed.resume || [],
       "resume"
-    ),
-
-    behavioral: normalizeQuestions(
-      parsed.behavioral || [],
-      "behavioral"
     ),
 
     hr: normalizeQuestions(

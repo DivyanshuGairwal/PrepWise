@@ -124,20 +124,14 @@ export default function QuestionCard({
               </p>
             </div>
           </div>
-
-          {/* Suggested Approach */}
           <div className="mt-6 flex items-start gap-4">
             <div className="w-9 h-9 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0">
               <Sparkles className="w-4 h-4 text-purple-400" />
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-purple-300 mb-2">
-                Suggested Answer Strategy
-              </h4>
 
               <p className="text-zinc-400 text-sm leading-relaxed">
-                {question.suggestedApproach}
               </p>
             </div>
           </div>

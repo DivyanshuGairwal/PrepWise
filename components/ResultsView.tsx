@@ -9,7 +9,6 @@ import {
   Check,
   Search,
   Terminal,
-  Star,
   Sparkles,
   UserCheck,
   Brain,
@@ -38,15 +37,10 @@ export default function ResultsView({
   const allQuestions = [
     ...data.technical,
     ...data.resume,
-    ...data.behavioral,
     ...data.hr,
   ];
 
-  const detectedSkills = Array.from(
-    new Set(
-      allQuestions.flatMap((q) => q.keyPoints)
-    )
-  ).slice(0, 20);
+  const detectedSkills = [];
 
   const tabThemes = {
     technical: {
@@ -67,16 +61,6 @@ export default function ResultsView({
       icon: FileText,
       label: "Resume Deep Dive",
       count: data.resume.length,
-    },
-
-    behavioral: {
-      primary: "bg-emerald-600",
-      bg: "bg-emerald-500/10",
-      border: "border-emerald-500/40",
-      text: "text-emerald-400",
-      icon: Star,
-      label: "Behavioral",
-      count: data.behavioral.length,
     },
 
     hr: {
@@ -124,7 +108,6 @@ export default function ResultsView({
     allQuestions.forEach((q, i) => {
       content += `## ${i + 1}. ${q.question}\n\n`;
       content += `Why Asked: ${q.whyAsked}\n\n`;
-      content += `Suggested Approach: ${q.suggestedApproach}\n\n`;
       content += "---\n\n";
     });
 

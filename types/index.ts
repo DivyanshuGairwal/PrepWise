@@ -4,8 +4,6 @@ export interface Question {
   id: string;
   question: string;
   whyAsked: string;
-  suggestedApproach: string;
-  keyPoints: string[];
 }
 
 export interface AnalysisResult {
@@ -13,7 +11,6 @@ export interface AnalysisResult {
   roleMatch: number;
   technical: Question[];
   resume: Question[];
-  behavioral: Question[];
   hr: Question[];
 }
 

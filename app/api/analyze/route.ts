@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parsePdf } from "@/lib/pdf";
+import { extractResumedata } from "@/lib/extractResumedata";
 import { generateInterviewQuestions } from "@/lib/gemini";
 import { AnalysisResponse } from "@/types";
 import { calculateRoleMatch } from "@/lib/roleMatch";
 
 export async function POST(request: NextRequest): Promise<NextResponse<AnalysisResponse>> {
   try {
+    console.time("🚀 Total Analysis");
     // Check for API key existence first
    if (!process.env.OPENROUTER_API_KEY) {
   return NextResponse.json(
@@ -46,10 +48,17 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalysisR
 
     // 3. Extract text from PDF
     let resumeText = "";
+    let resumeData;
     try {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
-      resumeText = await parsePdf(buffer);
+      console.time("📄 PDF Parsing");
+
+resumeText = await parsePdf(buffer);
+
+console.timeEnd("📄 PDF Parsing");
+
+resumeData = extractResumedata(resumeText);
     } catch (pdfError: any) {
       return NextResponse.json(
         {
@@ -72,7 +81,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<AnalysisR
 
     // 4. Generate interview questions using OpenRouter
     const analysisResult = await generateInterviewQuestions(
-  resumeText,
+  JSON.stringify(resumeData),
   jobDescription
 );
 
@@ -80,7 +89,7 @@ analysisResult.roleMatch = calculateRoleMatch(
   resumeText,
   jobDescription
 );
-
+console.timeEnd("🚀 Total Analysis");
 return NextResponse.json({
   success: true,
   data: analysisResult
