@@ -41,6 +41,7 @@ export default function ResultsView({
   ];
 
   const detectedSkills = [];
+  
 
   const tabThemes: Record<
   QuestionType,
@@ -54,6 +55,17 @@ export default function ResultsView({
     count: number;
   }
 > = {
+
+
+    technical: {
+  primary: "bg-indigo-600",
+  bg: "bg-indigo-500/10",
+  border: "border-indigo-500/40",
+  text: "text-indigo-400",
+  icon: Terminal,
+  label: "Technical Prep",
+  count: data.technical.length,
+}, 
 
     resume: {
       primary: "bg-purple-600",
@@ -76,7 +88,7 @@ export default function ResultsView({
     },
   };
 
-const activeTheme =
+  const activeTheme =
   activeTab === "technical"
     ? tabThemes.technical
     : activeTab === "resume"
