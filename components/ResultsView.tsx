@@ -96,16 +96,21 @@ export default function ResultsView({
     : tabThemes.hr;
 
   const filteredQuestions = useMemo(() => {
-    const list = data[activeTab as keyof AnalysisResult];
+  const list =
+    activeTab === "technical"
+      ? data.technical
+      : activeTab === "resume"
+      ? data.resume
+      : data.hr;
 
-    if (!searchQuery.trim()) return list;
+  if (!searchQuery.trim()) return list;
 
-    return list.filter((q) =>
-      q.question
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    );
-  }, [data, activeTab, searchQuery]);
+  return list.filter((q) =>
+    q.question
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+}, [data, activeTab, searchQuery]);
 
   const handleCopyAll = async () => {
     const text = allQuestions
