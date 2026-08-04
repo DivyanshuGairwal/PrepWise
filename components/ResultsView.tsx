@@ -42,16 +42,18 @@ export default function ResultsView({
 
   const detectedSkills = [];
 
-  const tabThemes = {
-    technical: {
-      primary: "bg-indigo-600",
-      bg: "bg-indigo-500/10",
-      border: "border-indigo-500/40",
-      text: "text-indigo-400",
-      icon: Terminal,
-      label: "Technical Prep",
-      count: data.technical.length,
-    },
+  const tabThemes: Record<
+  QuestionType,
+  {
+    primary: string;
+    bg: string;
+    border: string;
+    text: string;
+    icon: any;
+    label: string;
+    count: number;
+  }
+> = {
 
     resume: {
       primary: "bg-purple-600",
@@ -74,10 +76,15 @@ export default function ResultsView({
     },
   };
 
-  const activeTheme = tabThemes[activeTab];
+const activeTheme =
+  activeTab === "technical"
+    ? tabThemes.technical
+    : activeTab === "resume"
+    ? tabThemes.resume
+    : tabThemes.hr;
 
   const filteredQuestions = useMemo(() => {
-    const list = data[activeTab];
+    const list = data[activeTab as keyof AnalysisResult];
 
     if (!searchQuery.trim()) return list;
 

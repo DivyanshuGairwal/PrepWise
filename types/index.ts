@@ -1,4 +1,4 @@
-export type QuestionType = 'technical' | 'resume' | 'behavioral' | 'hr';
+export type QuestionType = 'technical' | 'resume'  | 'hr';
 
 export interface Question {
   id: string;

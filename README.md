@@ -26,7 +26,6 @@ Instead of practicing generic interview questions, users receive role-specific a
 
 * Technical Questions
 * Resume-Based Questions
-* Behavioral Questions
 * HR & Culture Fit Questions
 
 ### Interactive Experience
