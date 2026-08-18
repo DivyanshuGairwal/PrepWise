@@ -37,3 +37,5 @@ export function calculateRoleMatch(
     (matched.length / jdSkills.length) * 100
   );
 }
+
+
