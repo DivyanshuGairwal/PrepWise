@@ -48,7 +48,7 @@ Instead of practicing generic interview questions, users receive role-specific a
 
 ## Tech Stack
 
-### Fronten
+### Frontend
 
 * Next.js 16
 * React
